@@ -1,0 +1,32 @@
+# Analyzer by Kijungnam V4.0 — AI Decision Dashboard
+
+티커/회사명 공통 검색과 세 개의 메뉴로 구성된 Streamlit 분석 앱입니다.
+
+한국거래소 종목 목록을 보완 검색하므로 `삼성전자`, `005930`, `005930.KS` 방식으로 한국 종목을 찾을 수 있습니다. 목록 조회가 일시적으로 실패하면 기존 Yahoo 검색으로 자동 전환됩니다.
+
+- `종합분석`: V3.3의 상세 점수, 추세, 진입, 지지·저항, 대응 시나리오와 점수 이력
+- `퀀트분석`: 기업 품질과 진입 시점 분리, CAN SLIM, 퀀트·기술·재무지표, 경쟁사, 실적·뉴스
+- `시장환경`: Market Health, Market Pulse 12, 금리·신용시장
+
+## 실행
+
+```bash
+python -m venv .venv
+# Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+streamlit run app.py
+```
+
+GitHub 저장소 루트에 이 폴더의 파일을 올린 뒤 Streamlit Community Cloud에서 `app.py`를 엔트리 파일로 지정합니다.
+
+## 데이터와 점수
+
+- Yahoo Finance 비공식 공개 엔드포인트와 `yfinance`를 사용하므로 지연, 누락, 심볼별 차이가 있을 수 있습니다.
+- 기관 수급·컨센서스·공매도·한국 공시는 무료 데이터에서 누락될 수 있으며 없는 값은 임의 추정하지 않습니다.
+- 점수는 0~100이며 Strong(80+), Good(65+), Neutral(45+), Weak(30+), Very Weak(<30)로 통일했습니다.
+- 종합점수: 펀더멘털 38%, 테크니컬 42%, 시장환경 20%.
+- 결과는 투자 권유가 아닌 참고 자료입니다.
+
+## Score History 저장 주의
+
+기본값은 `.data/score_history.json`입니다. Streamlit Cloud 로컬 디스크는 영구 저장소가 아니므로 재시작/재배포 때 사라질 수 있습니다. 화면의 JSON 내보내기/가져오기로 백업하십시오. 운영 환경에서는 외부 DB 연동을 권장합니다.

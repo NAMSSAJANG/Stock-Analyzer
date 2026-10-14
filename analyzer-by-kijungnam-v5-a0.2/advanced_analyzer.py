@@ -1,0 +1,289 @@
+from __future__ import annotations
+
+from datetime import datetime
+
+import numpy as np
+import pandas as pd
+import plotly.graph_objects as go
+import streamlit as st
+import yfinance as yf
+from plotly.subplots import make_subplots
+
+
+def _safe(v, default=np.nan):
+    try:
+        x=float(v)
+        return x if np.isfinite(x) else default
+    except Exception: return default
+
+
+def _score(v, low, high):
+    if not np.isfinite(v): return np.nan
+    return float(np.clip((v-low)/(high-low)*100,0,100))
+
+
+def _fmt(v, suffix="", digits=1):
+    return "—" if not np.isfinite(v) else f"{v:,.{digits}f}{suffix}"
+
+
+def _weighted(parts):
+    valid=[(v,w) for v,w in parts if np.isfinite(v)]
+    return float(sum(v*w for v,w in valid)/sum(w for _,w in valid)) if valid else 50.0
+
+
+def _rsi(c, n=14):
+    delta=c.diff(); up=delta.clip(lower=0).ewm(alpha=1/n,adjust=False).mean(); down=-delta.clip(upper=0).ewm(alpha=1/n,adjust=False).mean()
+    return 100-100/(1+up/down.replace(0,np.nan))
+
+
+def _adx(d, n=14):
+    up=d.High.diff(); dn=-d.Low.diff(); plus=np.where((up>dn)&(up>0),up,0.0); minus=np.where((dn>up)&(dn>0),dn,0.0)
+    tr=pd.concat([d.High-d.Low,(d.High-d.Close.shift()).abs(),(d.Low-d.Close.shift()).abs()],axis=1).max(axis=1)
+    atr=tr.ewm(alpha=1/n,adjust=False).mean(); p=100*pd.Series(plus,index=d.index).ewm(alpha=1/n,adjust=False).mean()/atr; m=100*pd.Series(minus,index=d.index).ewm(alpha=1/n,adjust=False).mean()/atr
+    return (100*(p-m).abs()/(p+m).replace(0,np.nan)).ewm(alpha=1/n,adjust=False).mean(),atr
+
+
+def _metrics(a):
+    d=a["data"].copy(); c=d.Close.astype(float); v=d.Volume.astype(float)
+    ema20=c.ewm(span=20,adjust=False).mean(); ema50=c.ewm(span=50,adjust=False).mean(); ema200=c.ewm(span=200,adjust=False).mean()
+    mid=c.rolling(20).mean(); std=c.rolling(20).std(); upper=mid+2*std; lower=mid-2*std
+    rs=_rsi(c); adx,atr=_adx(d); typical=(d.High+d.Low+d.Close)/3; vwap=(typical*v).cumsum()/v.cumsum().replace(0,np.nan)
+    obv=(np.sign(c.diff()).fillna(0)*v).cumsum(); macd=c.ewm(span=12,adjust=False).mean()-c.ewm(span=26,adjust=False).mean(); signal=macd.ewm(span=9,adjust=False).mean()
+    ret=lambda n:(c.iloc[-1]/c.iloc[-min(n,len(c))]-1)*100
+    high52=c.tail(252).max(); low52=c.tail(252).min(); pos=(c.iloc[-1]-low52)/max(high52-low52,1e-9)*100
+    vol_ratio=v.iloc[-1]/max(v.tail(20).mean(),1); atr_pct=atr.iloc[-1]/c.iloc[-1]*100; z=(c.iloc[-1]-c.tail(60).mean())/max(c.tail(60).std(),1e-9)
+    trend=_weighted([(_score(c.iloc[-1]/ema200.iloc[-1]-1,-.15,.25),.35),(_score(ema20.iloc[-1]/ema50.iloc[-1]-1,-.08,.10),.3),(_score(ret(252),-30,60),.35)])
+    momentum=_weighted([(_score(rs.iloc[-1],35,75),.3),(_score(ret(63),-20,30),.35),(_score(macd.iloc[-1]-signal.iloc[-1],-c.iloc[-1]*.015,c.iloc[-1]*.015),.35)])
+    volatility=float(np.clip(100-(atr_pct-1)*18,0,100)); supply=_weighted([(_score(vol_ratio,.5,2),.45),(_score(obv.iloc[-1]/max(abs(obv.tail(60)).max(),1),-.5,1),.35),(_score(c.iloc[-1]/vwap.iloc[-1]-1,-.08,.12),.2)])
+    overheat=max(0,(rs.iloc[-1]-68)*2.4)+max(0,z-1.5)*12
+    timing=float(np.clip(_weighted([(trend,.34),(momentum,.22),(volatility,.14),(supply,.2),(a["market"],.1)])-overheat,0,100))
+    return dict(d=d,c=c,v=v,ema20=ema20,ema50=ema50,ema200=ema200,upper=upper,lower=lower,obv=obv,rsi=float(rs.iloc[-1]),adx=float(adx.iloc[-1]),atr_pct=float(atr_pct),vwap=float(vwap.iloc[-1]),vol_ratio=float(vol_ratio),macd=float(macd.iloc[-1]),signal=float(signal.iloc[-1]),ret3=float(ret(63)),ret12=float(ret(252)),high52=float(high52),low52=float(low52),position=float(pos),z=float(z),trend=trend,momentum=momentum,volatility=volatility,supply=supply,timing=timing)
+
+
+def quant_snapshot(a):
+    m = _metrics(a)
+    inf = a["inf"]
+    quality = _weighted([(a["fundamental"], .65), (_score(_safe(inf.get("revenueGrowth")) * 100, -5, 25), .2), (_score(_safe(inf.get("returnOnEquity")) * 100, 0, 30), .15)])
+    score = _weighted([(quality, .55), (m["timing"], .45)])
+    return {"score": score, "quality": quality, "timing": m["timing"], "trend": m["trend"], "momentum": m["momentum"], "supply": m["supply"], "volatility": m["volatility"]}
+
+
+def _bar_card(label,value,description,color_fn,tag="FACTOR"):
+    color=color_fn(value)
+    st.markdown(f"""<div class='v4-factor'><div><span class='v4-tag'>{tag}</span><b>{label}</b></div>
+    <div class='v4-num' style='color:{color}'>{value:.1f}</div><div class='v4-track'><div style='width:{value:.1f}%;background:{color}'></div></div>
+    <p>{description}</p></div>""",unsafe_allow_html=True)
+
+
+def _status_row(label,value,guide,tone="neutral"):
+    st.markdown(f"<div class='v4-row {tone}'><div><b>{label}</b><small>{guide}</small></div><strong>{value}</strong></div>",unsafe_allow_html=True)
+
+
+@st.cache_data(ttl=3600,show_spinner=False)
+def _peer_info(symbols):
+    out=[]
+    for sym in symbols[:6]:
+        try:
+            x=yf.Ticker(sym).get_info(); h=yf.download(sym,period="1y",auto_adjust=True,progress=False,threads=False)
+            if isinstance(h.columns,pd.MultiIndex): h.columns=h.columns.get_level_values(0)
+            c=h.Close.dropna(); ret=(c.iloc[-1]/c.iloc[0]-1)*100 if len(c)>1 else np.nan
+            out.append({"종목":x.get("shortName",sym),"티커":sym,"시가총액":_safe(x.get("marketCap"))/1e9,"PER":_safe(x.get("trailingPE")),"PBR":_safe(x.get("priceToBook")),"ROE":_safe(x.get("returnOnEquity"))*100,"영업이익률":_safe(x.get("operatingMargins"))*100,"12M":ret})
+        except Exception: pass
+    return pd.DataFrame(out)
+
+
+def _peer_defaults(symbol,inf):
+    sector=(inf.get("sector") or "").lower()
+    pools={"technology":["AAPL","MSFT","NVDA","AVGO","ORCL"],"financial":["JPM","BAC","WFC","GS","MS"],"healthcare":["LLY","JNJ","UNH","ABBV","MRK"],"consumer cyclical":["AMZN","TSLA","HD","MCD","NKE"],"communication":["META","GOOGL","NFLX","TMUS","DIS"],"energy":["XOM","CVX","COP","SLB","EOG"]}
+    if symbol.endswith((".KS",".KQ")): return [symbol,"005930.KS","000660.KS","035420.KS","051910.KS"]
+    pool=next((v for k,v in pools.items() if k in sector),[symbol,"SPY","QQQ"])
+    return list(dict.fromkeys([symbol]+pool))[:5]
+
+
+@st.cache_data(ttl=3600,show_spinner=False)
+def _calendar_data(symbol):
+    try:
+        cal=yf.Ticker(symbol).calendar
+        days=None
+        if isinstance(cal,dict):
+            raw=cal.get("Earnings Date") or cal.get("EarningsDate")
+            if isinstance(raw,(list,tuple)) and raw: raw=raw[0]
+            if raw is not None:
+                dt=pd.Timestamp(raw)
+                if dt.tzinfo is not None: dt=dt.tz_localize(None)
+                days=(dt.normalize()-pd.Timestamp.now().normalize()).days
+        return cal,days
+    except Exception: return None,None
+
+
+def _entry_label(score):
+    if score>=80: return "🟢 진입 우위",0
+    if score>=65: return "🟢 진입 검토",1
+    if score>=45: return "🟡 관망·조건 확인",2
+    if score>=30: return "🟠 진입 보류",3
+    return "🔴 진입 회피",4
+
+
+def _entry_visual(label):
+    text=str(label)
+    if "눌림목" in text or "진입 우위" in text or "진입 검토" in text: return "#34d399","●"
+    if "모멘텀" in text: return "#38bdf8","●"
+    if "추격주의" in text or "관망" in text: return "#facc15","●"
+    if "대기" in text or "보류" in text or "실적 확인" in text: return "#fb923c","●"
+    if "회피" in text or "금지" in text: return "#fb7185","●"
+    return "#94a3b8","●"
+
+
+def _entry_text(label):
+    return str(label).replace("🟢 ","").replace("🟡 ","").replace("🟠 ","").replace("🔴 ","")
+
+
+def _entry_decision(symbol,a,m,entry_score=None,entry_snapshot=None):
+    base,level=_entry_label(m["timing"] if entry_score is None else entry_score); risks=[]; releases=[]; cal,earnings_days=_calendar_data(symbol)
+    if earnings_days is not None and 0<=earnings_days<=7:
+        risks.append(f"실적 발표가 D-{earnings_days}로 임박했습니다")
+        releases.append("실적 발표 후 가격 방향과 거래량 확인")
+    if m["rsi"]>=72:
+        risks.append(f"RSI {m['rsi']:.1f}로 단기 과열 구간입니다")
+        releases.append("강한 추세라면 초기 비중 축소, 아니면 20일선 부근 눌림 확인")
+    hi=a["entry_range"][1]; distance=(a["now"]/hi-1)*100
+    if distance>5:
+        risks.append(f"현재가가 추천 진입구간 상단보다 {distance:.1f}% 높습니다")
+        releases.append("추천 진입가격대 재진입 또는 새 지지 형성")
+    if m["vol_ratio"]<.8:
+        risks.append(f"거래량이 20일 평균의 {m['vol_ratio']:.2f}배로 확인 강도가 낮습니다")
+        releases.append("평균 이상의 거래량을 동반한 반등·돌파 확인")
+    if a["market"]<45:
+        risks.append(f"시장환경이 {a['market']:.1f}점으로 Weak 구간입니다")
+        releases.append("시장환경 45점 이상 회복")
+    stop=max(a["supports"][-1],a["entry_range"][0]-a["atr"]*1.3); stop_distance=(a["now"]/stop-1)*100
+    if stop_distance>12:
+        risks.append(f"무효화선까지 거리가 {stop_distance:.1f}%로 손실 허용폭이 큽니다")
+        releases.append("가까운 지지 형성으로 손절 거리 축소")
+    final_level=min(4,level+1) if risks and entry_snapshot is None else level
+    labels=["🟢 진입 우위","🟢 진입 검토","🟡 관망·조건 확인","🟠 진입 보류","🔴 진입 회피"]
+    final=entry_snapshot.status if entry_snapshot is not None else labels[final_level]
+    if earnings_days is not None and 0<=earnings_days<=3: final="🟠 실적 확인 전 보류"
+    return dict(base=base,final=final,risks=risks,releases=list(dict.fromkeys(releases)),calendar=cal)
+
+
+def render_advanced(symbol,a,prices_fn,news_fn,money,pct,clamp,grade,color_fn,entry_snapshot=None):
+    st.markdown("""<style>
+    .v4-hero{border:1px solid #29415e;border-radius:16px;padding:20px;background:#0d1b2d;margin-bottom:14px}.v4-hero h2{margin:.2rem 0 .8rem}.v4-hero p{color:#cbd5e1;line-height:1.75;margin:0}.v4-decision{border-top:1px solid #29415e;border-bottom:1px solid #29415e;padding:12px 0;margin:0 0 12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}.v4-decision b{color:#f8fafc}.v4-decision small{display:block;width:100%;color:#94a3b8;line-height:1.55}.v4-status{display:inline-flex;align-items:center;gap:7px;border:1px solid currentColor;border-radius:999px;padding:4px 10px;font-weight:800;background:rgba(15,23,42,.55)}.v4-status.hero{border:0;padding:0;background:transparent;font-size:2rem}
+    .v4-factor{border:1px solid #29415e;border-radius:14px;padding:16px;background:#0d1b2d;min-height:180px;margin-bottom:12px}.v4-tag{display:inline-block;color:#7dd3fc;background:#123252;border-radius:7px;padding:4px 7px;margin-right:8px;font-size:.7rem}.v4-num{font-size:2rem;font-weight:850;text-align:center;margin:12px}.v4-track{height:7px;background:#223149;border-radius:99px;overflow:hidden}.v4-track div{height:100%;border-radius:99px}.v4-factor p{color:#aebdd0;font-size:.86rem;line-height:1.55}
+    .v4-row{border:1px solid #29415e;border-left:3px solid #64748b;border-radius:11px;padding:13px 15px;margin:8px 0;background:#0d1b2d;display:flex;justify-content:space-between;gap:18px;align-items:center}.v4-row small{display:block;color:#8292a8;margin-top:4px}.v4-row strong{text-align:right;white-space:nowrap}.v4-row.good{border-left-color:#10b981}.v4-row.good strong{color:#34d399}.v4-row.bad{border-left-color:#ef4444}.v4-row.bad strong{color:#fb7185}
+    </style>""",unsafe_allow_html=True)
+    m=_metrics(a); inf=a["inf"]; name=inf.get("longName",symbol); entry_score=entry_snapshot.score if entry_snapshot else m["timing"]; decision=_entry_decision(symbol,a,m,entry_score,entry_snapshot)
+    quality=_weighted([(a["fundamental"],.65),(_score(_safe(inf.get("revenueGrowth"))*100,-5,25),.2),(_score(_safe(inf.get("returnOnEquity"))*100,0,30),.15)])
+    verdict=decision["final"]
+    trend_strength=entry_snapshot.trend_strength if entry_snapshot else m["trend"]
+    engine_note=entry_snapshot.interpretation if entry_snapshot else "과열·가격 위치·거래량·시장환경·손실 허용폭·실적 일정을 반영합니다."
+    base_color,base_icon=_entry_visual(decision["base"]); final_color,final_icon=_entry_visual(decision["final"])
+    base_text=_entry_text(decision["base"]); final_text=_entry_text(decision["final"]); verdict_text=_entry_text(verdict)
+    st.header(f"퀀트분석 · {name} ({symbol})")
+    st.markdown(f"<div class='v4-hero'><div class='brief-kicker'>ENTRY ENGINE V2 DECISION</div><h2><span class='v4-status hero' style='color:{final_color}'>{final_icon} {verdict_text}</span></h2><div class='v4-decision'><b>기본 판정</b><span class='v4-status' style='color:{base_color}'>{base_icon} {base_text}</span><span>→</span><b>최종 판정</b><span class='v4-status' style='color:{final_color}'>{final_icon} {final_text}</span><small>{engine_note}</small></div><p>기업 종합점수는 {quality:.1f}점으로 기존 산식을 유지합니다. Trend Strength는 {trend_strength:.1f}점, Entry Timing은 {entry_score:.1f}점입니다. 좋은 기업과 좋은 매수 시점은 별도로 평가하며 RSI {m['rsi']:.1f}는 단독 보류 조건이 아닙니다.</p></div>",unsafe_allow_html=True)
+    c1,c2=st.columns(2)
+    with c1:
+        st.subheader("기업 종합점수"); _bar_card("기업 품질",quality,"성장성·수익성·재무안정성과 밸류에이션을 종합합니다.",color_fn,"QUALITY")
+    with c2:
+        st.subheader("진입 타이밍"); _bar_card("현재 진입 여건",entry_score,"Entry Engine v2의 6개 공통 요소를 반영합니다.",color_fn,"ENTRY V2")
+    if decision["risks"]:
+        left,right=st.columns(2)
+        with left: st.warning("**현재 주의 조건**\n\n"+"\n\n".join(f"• {x}" for x in decision["risks"]))
+        with right: st.info("**판정 상향을 위한 확인 조건**\n\n"+"\n\n".join(f"• {x}" for x in decision["releases"]))
+    else:
+        st.success("현재 확인된 주요 위험 조건으로 인한 추가 하향은 없습니다. 무효화선과 권장 비중은 계속 지켜주세요.")
+    cols=st.columns(4)
+    for col,(label,key,desc) in zip(cols,[("추세","trend","이동평균·12개월"),("모멘텀","momentum","RSI·MACD·3개월"),("변동성","volatility","ATR 기반 안정성"),("수급","supply","거래량·VWAP·OBV")]):
+        with col:_bar_card(label,m[key],desc,color_fn,"5-FACTOR")
+
+    st.subheader("가격·추세·거래량")
+    d=m["d"].tail(130); idx=d.index
+    fig=make_subplots(rows=2,cols=1,shared_xaxes=True,row_heights=[.72,.28],vertical_spacing=.04,specs=[[{}],[{"secondary_y":True}]])
+    fig.add_trace(go.Scatter(x=idx,y=d.Close,line=dict(color="#f8fafc",width=2.5),name="Close"),row=1,col=1)
+    for srs,n,c,ds in [(m['ema20'],"EMA20","#3b82f6",None),(m['ema50'],"EMA50","#f59e0b",None),(m['ema200'],"EMA200","#a855f7","dash")]: fig.add_trace(go.Scatter(x=idx,y=srs.reindex(idx),line=dict(color=c,width=1.6,dash=ds),name=n),row=1,col=1)
+    fig.add_trace(go.Scatter(x=idx,y=m['upper'].reindex(idx),line=dict(color="#64748b",width=1,dash="dot"),name="BB Upper"),row=1,col=1)
+    fig.add_trace(go.Scatter(x=idx,y=m['lower'].reindex(idx),line=dict(color="#64748b",width=1,dash="dot"),fill="tonexty",fillcolor="rgba(100,116,139,.08)",name="BB Lower"),row=1,col=1)
+    colors=np.where(d.Close>=d.Open,"#38bdf8","#fb7185"); fig.add_trace(go.Bar(x=idx,y=d.Volume,marker_color=colors,name="Volume"),row=2,col=1)
+    fig.add_trace(go.Scatter(x=idx,y=m['obv'].reindex(idx),line=dict(color="#f59e0b",width=1.5),name="OBV"),row=2,col=1,secondary_y=True)
+    fig.update_layout(height=590,paper_bgcolor="rgba(0,0,0,0)",plot_bgcolor="#0a1728",font=dict(color="#cbd5e1"),legend=dict(orientation="h"),margin=dict(l=30,r=25,t=55,b=25)); fig.update_xaxes(gridcolor="#20344d"); fig.update_yaxes(gridcolor="#20344d")
+    st.plotly_chart(fig,use_container_width=True)
+    st.info(f"핵심 관찰 · 현재 주가는 52주 범위의 {m['position']:.1f}% 위치입니다. 장기 추세 {m['trend']:.1f}점, RSI {m['rsi']:.1f}, 거래량은 20일 평균의 {m['vol_ratio']:.2f}배입니다.")
+
+    eps_growth=_safe(inf.get("earningsGrowth"))*100; rev_growth=_safe(inf.get("revenueGrowth"))*100; roe=_safe(inf.get("returnOnEquity"))*100
+    can={"C":_score(eps_growth,-10,30),"A":_score(roe,0,25),"N":_weighted([(m['trend'],.6),(_score(m['position'],40,95),.4)]),"S":_score(m['vol_ratio'],.6,2),"L":m['trend'],"I":m['supply'],"M":a['market']}
+    st.subheader("CAN SLIM 분석")
+    st.caption("원형 C·A·N·S·L·I·M과 보조 퀀트 지표를 분리했습니다. 데이터가 없는 항목은 총점 계산에서 제외합니다.")
+    cols=st.columns(2)
+    can_desc={"C":"최근 EPS 성장","A":"연간 수익성·ROE","N":"신고가·새로운 모멘텀","S":"거래량 수급","L":"시장 주도력","I":"기관 수급 대용지표","M":"시장 방향"}
+    can_guide={
+        "C":"최근 EPS 성장률입니다. 높을수록 이익 증가가 강하지만, 극단값은 기저효과·일회성 이익을 확인해야 합니다.",
+        "A":"ROE를 중심으로 연간 수익성을 봅니다. 높을수록 자본 효율이 좋지만 부채로 높아진 ROE인지 함께 확인합니다.",
+        "N":"신고가 접근도와 추세를 결합합니다. 높을수록 새로운 상승 모멘텀이 강하지만 추격 매수 위험도 확인합니다.",
+        "S":"최근 거래량이 평균보다 활발한지 봅니다. 상승과 동반된 거래량 증가는 신호 확인에 도움이 됩니다.",
+        "L":"장기·중기 가격 추세의 주도력을 나타냅니다. 높을수록 시장 대비 강한 흐름일 가능성이 큽니다.",
+        "I":"거래량·VWAP·OBV로 기관 수급을 간접 추정합니다. 실제 기관 보유 자료가 아닌 대용지표입니다.",
+        "M":"시장환경 점수입니다. 높을수록 시장이 개별 종목 상승을 뒷받침하는 환경으로 해석합니다.",
+    }
+    for i,(k,v) in enumerate(can.items()):
+        with cols[i%2]:
+            if np.isfinite(v): _bar_card(f"{k} · {can_desc[k]}",v,can_guide[k],color_fn,"CAN SLIM")
+            else: st.info(f"{k} · {can_desc[k]}: 데이터 없음 — 총점에서 제외")
+    with st.expander("CAN SLIM 점수 읽는 법",expanded=False):
+        st.markdown("**공통 기준** · 50점은 중립, 65점 이상은 우호적, 80점 이상은 강한 신호로 봅니다. 한 항목의 고득점보다 여러 항목이 함께 개선되는지가 중요합니다.")
+        st.caption("CAN SLIM 점수는 공개 데이터 기반의 상대적 상태 표시이며, 원자료의 시차·누락·일회성 변동이 있을 수 있습니다.")
+
+    with st.expander("보조 퀀트 지표",expanded=False):
+        quant={"평균회귀":float(np.clip(50-m['z']*18,0,100)),"모멘텀":m['momentum'],"다중 시간대":m['trend'],"낙폭 위험도":float(np.clip(100-abs(min(0,(a['now']/m['high52']-1)*100))*1.2,0,100)),"스마트머니 흐름":m['supply'],"Target Price Factor":float(np.clip(50+(a['resist'][-1]/a['now']-1)*180,0,100)),"통계적 Z-Score":float(np.clip(50-m['z']*15,0,100)),"변동성 조정":m['volatility']}
+        quant_guide={
+            "평균회귀":"최근 평균에서 벗어난 정도입니다. 50은 중립, 높을수록 평균 아래여서 반등 여지, 낮을수록 평균 위여서 과열 가능성을 뜻합니다.",
+            "모멘텀":"RSI·MACD·3개월 수익률을 결합합니다. 높을수록 상승 속도가 강하지만 과열 여부를 함께 봐야 합니다.",
+            "다중 시간대":"단기·중기·장기 추세의 정렬 정도입니다. 높을수록 여러 시간대가 같은 상승 방향을 가리킵니다.",
+            "낙폭 위험도":"52주 고점 대비 위치를 점수화합니다. 높을수록 고점과 가까워 기존 낙폭 부담이 작다는 뜻이며 미래 하락 위험을 보장하지 않습니다.",
+            "스마트머니 흐름":"거래량·VWAP·OBV 기반의 수급 대용지표입니다. 높을수록 누적 매수 흐름이 우호적이라는 의미입니다.",
+            "Target Price Factor":"현재가에서 저항 참고선까지의 여유를 점수화합니다. 높을수록 잠재 여유가 크지만 공식 목표주가는 아닙니다.",
+            "통계적 Z-Score":"가격이 최근 평균에서 몇 표준편차 떨어졌는지 변환한 점수입니다. 50은 평균 부근, 낮을수록 평균보다 높은 위치입니다.",
+            "변동성 조정":"ATR 기반 가격 안정성입니다. 높을수록 변동성이 낮고, 낮을수록 손절 폭과 비중을 보수적으로 잡아야 합니다.",
+        }
+        st.caption("보조 점수는 50을 중립으로 읽습니다. 방향 확인용이며 단독 매수·매도 신호로 사용하지 않습니다.")
+        cols=st.columns(2)
+        for i,(k,v) in enumerate(quant.items()):
+            with cols[i%2]:_bar_card(k,v,quant_guide[k],color_fn,"QUANT")
+
+    st.subheader("기술 지표")
+    tech=[("RSI (14)",_fmt(m['rsi']),"0~100 강도 지표 · 70↑ 과열, 30↓ 과매도, 40~65 중립권. 과열이 즉시 매도를 뜻하지는 않습니다.","bad" if m['rsi']>70 else "good" if 40<=m['rsi']<=65 else "neutral"),("ADX",_fmt(m['adx']),"추세의 방향이 아닌 강도 · 25↑ 추세 존재, 40↑ 강한 추세","good" if m['adx']>=25 else "neutral"),("ATR%",_fmt(m['atr_pct'],"%",2),"평균 가격 변동폭 · 높을수록 변동성과 필요한 손절 여유가 큽니다.","bad" if m['atr_pct']>6 else "neutral"),("VWAP 거리",_fmt((a['now']/m['vwap']-1)*100,"%"),"양수는 누적 평균가격 위 · 지나치게 크면 추격 진입 위험을 확인합니다.","good" if a['now']>=m['vwap'] else "bad"),("12M 수익률",_fmt(m['ret12'],"%"),"장기 상대강도 · 극단값은 액면분할·데이터 조정 여부를 확인합니다.","good" if m['ret12']>0 else "bad"),("3M 수익률",_fmt(m['ret3'],"%"),"최근 약 3개월의 단기 추세 · 12개월 흐름과 같은 방향인지 비교합니다.","good" if m['ret3']>0 else "bad"),("거래량 비율",_fmt(m['vol_ratio'],"x",2),"20일 평균 대비 거래량 · 1배는 평균, 1.2배 이상은 비교적 활발합니다.","good" if m['vol_ratio']>=1.2 else "neutral"),("MACD 방향","상승" if m['macd']>m['signal'] else "하락","MACD가 시그널 위면 상승 모멘텀 우세 · 횡보장에서는 잦은 반전 가능","good" if m['macd']>m['signal'] else "bad")]
+    for x in tech:_status_row(*x)
+
+    st.subheader("재무 지표")
+    financial=[("PER",_fmt(_safe(inf.get('trailingPE'))),"주가÷주당이익 · 낮다고 항상 저평가는 아니며 업종·성장률과 비교합니다."),("PBR",_fmt(_safe(inf.get('priceToBook'))),"주가÷주당순자산 · 자산 구조가 다른 업종끼리 단순 비교하지 않습니다."),("ROE",_fmt(roe,"%"),"자기자본 수익성 · 17% 이상을 우수 참고하되 부채 효과를 함께 확인합니다."),("EPS 성장률",_fmt(eps_growth,"%"),"주당이익의 최근 공개 성장률 · 고성장은 긍정적이나 기저효과·일회성 이익을 확인합니다."),("매출 성장률",_fmt(rev_growth,"%"),"최근 공개 매출 증가율 · 이익 성장과 함께 나타나는지 확인합니다."),("영업이익률",_fmt(_safe(inf.get('operatingMargins'))*100,"%"),"매출에서 영업이익이 차지하는 비율 · 높고 안정적일수록 본업 수익성이 좋습니다."),("부채비율",_fmt(_safe(inf.get('debtToEquity')),"%"),"자기자본 대비 부채 · 낮을수록 일반적으로 안정적이나 업종별 기준이 다릅니다."),("시가총액",_fmt(_safe(inf.get('marketCap'))/1e9,"B"),"기업의 시장가치 · 통화 단위는 Yahoo 원자료 기준입니다.")]
+    for label,val,guide in financial:
+        tone="neutral" if val=="—" else "good" if label in ("ROE","EPS 성장률","매출 성장률") and not val.startswith("-") else "neutral"
+        _status_row(label,val,guide,tone)
+
+    st.subheader("동일 업종 경쟁사 비교")
+    defaults=_peer_defaults(symbol,inf); raw=st.text_input("비교 티커 · 쉼표로 수정",value=", ".join(defaults),key=f"peers_{symbol}")
+    peers=[x.strip().upper() for x in raw.split(",") if x.strip()]
+    pf=_peer_info(peers)
+    if pf.empty: st.info("비교 가능한 경쟁사 데이터가 없습니다.")
+    else: st.dataframe(pf.style.format({"시가총액":"{:,.1f}B","PER":"{:.1f}","PBR":"{:.2f}","ROE":"{:.1f}%","영업이익률":"{:.1f}%","12M":"{:+.1f}%"},na_rep="—"),hide_index=True,use_container_width=True)
+    st.caption("산업 분류 기반 자동 후보입니다. 사업 구조가 다른 종목은 직접 삭제하거나 티커를 추가하세요.")
+
+    st.subheader("실적 일정 · 공시·뉴스")
+    left,right=st.columns(2)
+    with left:
+        st.markdown("**종목 일정**")
+        try:
+            cal=decision["calendar"]
+            if isinstance(cal,dict):
+                for k,v in cal.items(): st.write(f"{k}: {v}")
+            elif cal is not None: st.dataframe(pd.DataFrame(cal),use_container_width=True)
+            else: st.info("Yahoo에서 제공된 예정 일정이 없습니다.")
+        except Exception: st.info("예정 일정을 불러오지 못했습니다.")
+        st.caption("실적 발표 전후에는 변동성이 확대될 수 있어 신규 진입 비중 축소가 유리할 수 있습니다.")
+    with right:
+        st.markdown("**최근 뉴스**")
+        rows=news_fn(symbol)
+        if not rows: st.info("현재 불러온 뉴스가 없습니다.")
+        for title,summary,url in rows[:5]:
+            st.markdown(f"[{title}]({url})" if url else title); st.caption(summary[:180] if summary else "제목 기반 참고 뉴스")
+    st.warning("기관 수급·컨센서스·공매도·한국 공시는 무료 Yahoo 데이터에서 누락될 수 있습니다. 없는 데이터는 임의 추정하지 않으며, DART 정식 공시는 별도 API 키 연동이 필요합니다.")
