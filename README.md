@@ -18,4 +18,3 @@
 | [analyzer-by-kijungnam-v6](analyzer-by-kijungnam-v6/) | 진입 유형·위험 분석·스캐너 |
 | [analyzer-by-kijungnam-v6c-0.1](analyzer-by-kijungnam-v6c-0.1/) | Trade Lab 및 과거 진입 검증 |
 | [Stock-Analyzer_v6d_0.1](Stock-Analyzer_v6d_0.1/) | 별도 패키지로 분리한 개인 테스트 버전 |
-
