@@ -29,14 +29,15 @@ from scoring_utils import percentile_score
 from setup_engine import build_setups
 from sr_engine import build_zones
 from technical_engine import build_technical_snapshot
-st.set_page_config(page_title="Stock Analyzer v6_A_0.3", page_icon="📈", layout="wide")
+from app_version import APP_VERSION
+st.set_page_config(page_title=f"Stock Analyzer {APP_VERSION}", page_icon="📈", layout="wide")
 try:
     from trade_core import Costs, dec, position_size
     from execution_lab import render_execution_lab
 except ImportError:
     import logging
     logging.exception("Trade module import failed")
-    st.error("매매 계산 파일을 불러오지 못했습니다. v6_A_0.3 ZIP의 전체 파일을 app.py와 같은 위치에 업로드한 뒤 Manage app → Reboot app을 실행해 주세요.")
+    st.error(f"매매 계산 파일을 불러오지 못했습니다. {APP_VERSION} ZIP의 전체 파일을 app.py와 같은 위치에 업로드한 뒤 Manage app → Reboot app을 실행해 주세요.")
     st.stop()
 from calibration_cache import calibration_key
 
@@ -1607,7 +1608,7 @@ def render_analysis(a: dict, symbol: str):
     render_sr_and_chart(a)
 
     data_date=pd.Timestamp(a["frame"].index[-1]).date()
-    HISTORY.record(symbol,{"opportunity":opp.score,"company":company.score,"trend":tech.trend,"momentum":tech.momentum,"relative_strength":tech.relative_strength,"pullback":setups.pullback.score,"momentum_entry":setups.momentum.score,"market":market.score,"risk":risk.score,"preferred_setup":setups.preferred},data_date,{"version":"6.0.12","source":"recorded"})
+    HISTORY.record(symbol,{"opportunity":opp.score,"company":company.score,"trend":tech.trend,"momentum":tech.momentum,"relative_strength":tech.relative_strength,"pullback":setups.pullback.score,"momentum_entry":setups.momentum.score,"market":market.score,"risk":risk.score,"preferred_setup":setups.preferred},data_date,{"version":APP_VERSION,"source":"recorded"})
 
     with st.expander("최근 뉴스"):
         rows=news(symbol)
@@ -3026,7 +3027,7 @@ def render_calibration(a: dict, symbol: str):
 
 # -------------------- App shell --------------------
 st.title("Stock Analyzer by Kijungnam")
-st.caption("v6_A_0.3 · MULTI-LENS SETUP & DECISION SYSTEM · Trade Lab Plus")
+st.caption(f"{APP_VERSION} · MULTI-LENS SETUP & DECISION SYSTEM · Scenario Lab + Trade Lab")
 
 with st.expander("🔥 V6 종목 스캐너 · 시장 전체 후보 찾기", expanded=False):
     render_scanner_section()
@@ -3049,7 +3050,7 @@ st.markdown("<div class='v6-section'></div>", unsafe_allow_html=True)
 st.caption("통합 판단에서 전체 상태를 먼저 보고, 궁금한 근거만 아래 상세 분석으로 내려가는 구조입니다.")
 mode=st.radio(
     "개별 분석 메뉴",
-    ["🧭 V6 통합 판단","📊 핵심 분석","🎯 퀀트 분석","🧩 옵션 분석","🌎 시장 환경","🧪 과거 진입 검증","🧮 Trade Lab","💾 History"],
+    ["🧭 V6 통합 판단","📊 핵심 분석","🎯 퀀트 분석","🧩 옵션 분석","🌎 시장 환경","🧪 과거 진입 검증","🧮 Trade Lab","🔭 Scenario Lab","💾 History"],
     horizontal=True,label_visibility="collapsed"
 )
 st.divider()
@@ -3058,7 +3059,7 @@ analysis=None
 analysis_modes=("🧭 V6 통합 판단","📊 핵심 분석","🎯 퀀트 분석","🧩 옵션 분석","🧪 과거 진입 검증")
 if symbol and mode in analysis_modes:
     try:
-        with st.spinner(f"{symbol} · v6_A_0.3 엔진을 계산하는 중입니다..."):
+        with st.spinner(f"{symbol} · {APP_VERSION} 엔진을 계산하는 중입니다..."):
             analysis=build_full_analysis(symbol)
     except Exception as exc:
         st.error(f"분석을 계산하지 못했습니다: {exc}")
@@ -3095,6 +3096,10 @@ elif mode=="🧪 과거 진입 검증":
 elif mode=="🧮 Trade Lab":
     from trade_lab import render_trade_lab
     render_trade_lab()
+
+elif mode=="🔭 Scenario Lab":
+    from scenario_lab import render_scenario_lab
+    render_scenario_lab(symbol, info)
 
 elif mode=="💾 History":
     st.header("V6 History Database")

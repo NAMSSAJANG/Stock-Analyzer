@@ -8,6 +8,7 @@ import hashlib
 import importlib
 import json
 from pathlib import Path
+from app_version import APP_VERSION
 
 ROOT = Path(__file__).resolve().parent
 MANIFEST = ROOT / "release_manifest.json"
@@ -23,7 +24,7 @@ def main():
     args = parser.parse_args()
     if args.write_manifest:
         files = sorted([*ROOT.glob("*.py"), ROOT / "requirements.txt", ROOT / ".streamlit/config.toml"])
-        MANIFEST.write_text(json.dumps({"version": "v6_A_0.3", "sha256_lf": {
+        MANIFEST.write_text(json.dumps({"version": APP_VERSION, "sha256_lf": {
             f.relative_to(ROOT).as_posix(): digest(f) for f in files}}, indent=2) + "\n", encoding="utf-8")
         print("Release manifest written. Run verification next.")
         return
@@ -45,7 +46,9 @@ def main():
                  "execution_engine": ["run_execution_study"],
                  "execution_lab": ["render_execution_lab"],
                  "calibration_engine": ["run_setup_calibration"],
-                 "calibration_cache": ["calibration_key"]}
+                 "calibration_cache": ["calibration_key"],
+                 "scenario_engine": ["evaluate", "implied_growth"],
+                 "scenario_lab": ["render_scenario_lab"]}
     for name, attrs in contracts.items():
         module = importlib.import_module(name)
         if Path(module.__file__).resolve().parent != ROOT:
