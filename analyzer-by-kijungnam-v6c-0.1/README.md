@@ -1,11 +1,15 @@
-# Stock Analyzer v6_A_0.3
+# Stock Analyzer v6_A_0.4
 
 Multi-Lens Stock Setup & Decision System.
 
 A Streamlit-based stock analysis tool for evaluating company quality, trend, momentum, relative strength, market conditions, entry setups, and risk. Pullback Entry and Momentum Entry are evaluated separately.
 
+새 메뉴: **Scenario Lab** — 슬라이더 가치평가, 조건부 기대 성장률 역산, 가정 기록 및 내보내기.
+[사용법·계산식·기록 보관 범위](SCENARIO_LAB.md)를 먼저 확인하세요.
+
 ## Main Features
 
+- Scenario Lab: editable FCFF assumptions, reverse valuation, sensitivity and session snapshots
 - V6 Integrated Decision Dashboard
 - Opportunity & Company Quality
 - Pullback / Momentum Entry
@@ -40,7 +44,7 @@ Trade Lab은 종목 검색이나 인터넷 시세 조회 없이 사용할 수 �
 ## Offline checks
 
 ```bash
-python -m unittest test_trade_engine test_calculations_v602 test_execution_engine
+python -m unittest test_trade_engine test_calculations_v602 test_execution_engine test_scenario_engine test_scenario_ui
 python smoke_test.py
 python test_trade_ui.py
 python test_analysis_ui.py

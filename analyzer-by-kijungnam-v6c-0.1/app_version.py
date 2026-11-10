@@ -1,0 +1,1 @@
+APP_VERSION = "v6_A_0.4"
