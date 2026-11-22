@@ -112,7 +112,7 @@ uv run python scripts/validate_blueprint.py
 docker compose config --quiet
 ```
 
-기본 pytest는 네트워크 차단, live 제외입니다. 실제 공급자는 `uv run pytest -m live --enable-socket ...`로 명시적으로 검사합니다. 키 없는 PIT live는 skip이며 통과로 세지 않습니다.
+기본 pytest는 네트워크 차단, live 제외입니다. 실제 공급자는 `uv run pytest -m live --force-enable-socket ...`로 명시적으로 검사합니다. 키 없는 PIT live는 skip이며 통과로 세지 않습니다.
 
 Compose는 앱 하나와 DB 하나입니다. `.env`에 해시·충분히 긴 무작위 세션 시크릿을 넣고(Argon2 해시는 `$` 확장을 막도록 작은따옴표로 감쌉니다) `docker compose -p goldnam-local up --build`로 실행합니다. `http://localhost:10000`, 로컬 DB 포트 비공개/trust 인증. Secure 쿠키의 localhost 정책이 브라우저마다 달라 **폰은 실제 HTTPS 배포 주소**로 확인합니다. 자동 검사는 HTTPS fixture 서버를 씁니다. 테스트 코드·비밀번호는 운영 이미지에 포함하지 않습니다.
 
