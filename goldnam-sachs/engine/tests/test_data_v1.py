@@ -314,3 +314,58 @@ def test_universe_snapshot_fallback_and_json_null(tmp_path, monkeypatch):
         "date": "2025-01-01",
     }
     assert serialize(DataResult([1, 2], "fixture"))["data"] == [1, 2]
+
+
+def test_calendar_creation_is_serialized_across_provider_threads(monkeypatch):
+    from concurrent.futures import ThreadPoolExecutor
+    from time import sleep
+
+    from goldnam_engine.data import quality
+
+    monkeypatch.setattr(quality, "_calendars", {})
+    calls = []
+
+    def create(*args, **kwargs):
+        calls.append(1)
+        sleep(0.01)
+        return object()
+
+    monkeypatch.setattr(quality.xcals, "get_calendar", create)
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        calendars = list(pool.map(quality.calendar, ["kr"] * 8))
+    assert len(calls) == 1 and all(c is calendars[0] for c in calendars)
+
+
+def test_one_missing_symbol_cannot_disable_other_symbols():
+    cache = ResilientCache(wait=lambda _: None)
+
+    def failed():
+        return DataResult(None, "provider", status="failed")
+
+    assert cache.get("missing", [("provider", failed)], timedelta(hours=1)).status == "failed"
+    assert (
+        cache.get(
+            "index", [("provider", lambda: DataResult(123, "provider"))], timedelta(hours=1)
+        ).data
+        == 123
+    )
+
+
+def test_provider_timeout_shim_does_not_patch_global_requests(monkeypatch):
+    import sys
+    import types
+
+    import requests
+    from goldnam_engine.data.transport import BoundedRequests, BoundedSession, bound_provider
+
+    module = types.ModuleType("TestProvider.data")
+    module.requests = requests
+    monkeypatch.setitem(sys.modules, "TestProvider.data", module)
+    getter = Mock(return_value=Mock())
+    monkeypatch.setattr(requests, "get", getter)
+    bound_provider("TestProvider")
+    assert isinstance(module.requests, BoundedRequests)
+    module.requests.get("https://example.invalid")
+    assert getter.call_args.kwargs["timeout"] == (5, 15)
+    assert requests.get is getter
+    assert isinstance(module.requests.Session(), BoundedSession)

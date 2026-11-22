@@ -9,6 +9,7 @@ import pandas as pd
 import requests
 
 from .contracts import DataResult, UniverseProvider
+from .transport import bound_provider
 
 BIAS = "현재 지수 구성으로 과거 검증 · 상장폐지/편출 종목 누락에 따른 생존 편향"
 
@@ -53,6 +54,8 @@ class Universes(UniverseProvider):
             return out
         if market == "kr":
             from pykrx import stock
+
+            bound_provider("pykrx")
 
             rows = []
             for market_name, index_name, suffix in (

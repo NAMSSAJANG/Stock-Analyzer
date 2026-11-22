@@ -1,0 +1,4 @@
+/workspace/.venv-goldnam/lib/python3.12/site-packages/pykrx/__init__.py:4: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+events 1/1
+{"run_id": "16b1418a-2d2f-43d0-aad6-f4cdbda552f6", "market": "kr", "scope": "selected-symbol smoke", "prices_available": 1, "elapsed_seconds": 19.563674222999907, "composite_evidence": "미검증"}

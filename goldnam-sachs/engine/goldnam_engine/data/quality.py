@@ -1,4 +1,5 @@
 from datetime import date, datetime, timedelta, timezone
+from threading import Lock
 from typing import Any, cast
 
 import exchange_calendars as xcals
@@ -7,13 +8,19 @@ import pandas as pd
 
 from .contracts import DataResult
 
+_calendar_lock = Lock()
+_calendars: dict[str, Any] = {}
+
 
 def calendar(market: str) -> Any:
     if market not in {"us", "kr"}:
         raise ValueError("시장은 us 또는 kr이어야 합니다.")
-    return xcals.get_calendar(
-        "XNYS" if market == "us" else "XKRX", start="2010-01-01", end="2035-12-31"
-    )
+    with _calendar_lock:
+        if market not in _calendars:
+            _calendars[market] = xcals.get_calendar(
+                "XNYS" if market == "us" else "XKRX", start="2010-01-01", end="2035-12-31"
+            )
+        return _calendars[market]
 
 
 def price_ttl(market: str, now: datetime) -> timedelta:
@@ -71,7 +78,13 @@ def validate_prices(
 
 
 def market_for(symbol: str) -> str:
-    return "kr" if symbol.upper().endswith((".KS", ".KQ")) or symbol.isdigit() else "us"
+    return (
+        "kr"
+        if symbol.upper().endswith((".KS", ".KQ"))
+        or symbol.isdigit()
+        or symbol.upper() in {"^KS11", "^KQ11", "KS11", "KQ11"}
+        else "us"
+    )
 
 
 def now_utc() -> datetime:

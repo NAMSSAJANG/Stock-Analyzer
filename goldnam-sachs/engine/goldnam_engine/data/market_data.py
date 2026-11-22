@@ -11,6 +11,7 @@ from .contracts import CalendarProvider, DataResult, FxProvider, PriceProvider
 from .parquet_cache import ParquetCache
 from .quality import market_for, now_utc, price_ttl, validate_prices
 from .resilience import ResilientCache
+from .transport import bound_provider
 
 
 class YahooPrices(PriceProvider):
@@ -36,7 +37,11 @@ class FdrPrices(PriceProvider):
     def prices(self, symbol: str, start: date, end: date) -> DataResult[pd.DataFrame]:
         import FinanceDataReader as fdr
 
-        code = symbol.split(".")[0] if market_for(symbol) == "kr" else symbol
+        bound_provider("FinanceDataReader")
+
+        code = {"^KS11": "KS11", "^KQ11": "KQ11"}.get(
+            symbol, symbol.split(".")[0] if market_for(symbol) == "kr" else symbol
+        )
         raw = fdr.DataReader(code, start.isoformat(), end.isoformat())
         return validate_prices(raw, "FinanceDataReader", market_for(symbol), end)
 
@@ -100,6 +105,8 @@ class Fx(FxProvider):
                 )
             return DataResult(None, provider, status="failed", message="환율 없음")
         import FinanceDataReader as fdr
+
+        bound_provider("FinanceDataReader")
 
         frame = fdr.DataReader("USD/KRW", (date.today() - timedelta(days=20)).isoformat())
         if frame.empty:

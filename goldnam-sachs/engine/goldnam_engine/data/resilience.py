@@ -37,8 +37,9 @@ class ResilientCache(Generic[T]):
         failures: list[str] = []
         stale: DataResult[T] | None = None
         for name, call in providers:
+            breaker_key = f"{name}:{key}"
             with self.lock:
-                count, until = self.breakers.get(name, (0, now))
+                count, until = self.breakers.get(breaker_key, (0, now))
             if count >= 3 and now < until:
                 failures.append(f"{name}: 일시 중단")
                 continue
@@ -53,7 +54,7 @@ class ResilientCache(Generic[T]):
                     break
                 if result.usable:
                     with self.lock:
-                        self.breakers[name] = (0, now)
+                        self.breakers[breaker_key] = (0, now)
                         self.negative.pop(key, None)
                         # Failed/stale values are never stored as fresh successes.
                         if result.status in {"ok", "partial"}:
@@ -65,7 +66,7 @@ class ResilientCache(Generic[T]):
                 failures.append(f"{name}: 오래된 데이터")
                 continue
             with self.lock:
-                self.breakers[name] = (count + 3, self.clock() + timedelta(minutes=5))
+                self.breakers[breaker_key] = (count + 3, self.clock() + timedelta(minutes=5))
             failures.append(f"{name}: {result.message or '조회 실패'}")
         failed: DataResult[T] = DataResult(
             None,
