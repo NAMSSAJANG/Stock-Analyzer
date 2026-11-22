@@ -18,7 +18,7 @@ SECRET = "test-fixture-session-secret-at-least-32-chars"
 @pytest.fixture
 def bundle(tmp_path, monkeypatch):
     monkeypatch.delenv("PUBLIC_BASE_URL", raising=False)
-    store = Store("sqlite://")
+    store = Store(f"sqlite:///{tmp_path / 'api.sqlite'}")
     service = AnalysisService(store)
     frame, benchmark = make_momentum()
     as_of = frame.index[-1].date()
@@ -266,3 +266,32 @@ def test_saved_costs_apply_and_bad_holdings_are_validation_errors(bundle):
         client.post("/api/v1/trade-lab/plan", json={"holdings": [{"bad": "value"}]}).status_code
         == 422
     )
+
+
+def test_journal_uses_prior_close_not_same_day_lookahead(bundle):
+    client, store, _, _ = bundle
+    login(client)
+    for day, value in [("2026-01-02", 30), ("2026-01-05", 90)]:
+        store.put(
+            "scores", f"us:{day}:AAPL", {"symbol": "AAPL", "score": {"value": value, "as_of": day}}
+        )
+    row = client.post(
+        "/api/v1/journal",
+        json={"symbol": "AAPL", "date": "2026-01-05", "side": "buy", "quantity": 1, "price": 100},
+    ).json()["data"]
+    assert row["snapshot"]["score"]["value"] == 30
+
+
+def test_watch_changes_and_analysis_history(bundle):
+    client, store, _, _ = bundle
+    login(client)
+    client.post("/api/v1/watchlist", json={"symbol": "AAPL"})
+    for day, value in [("2026-01-02", 30), ("2026-01-05", 40)]:
+        store.put(
+            "scores",
+            f"us:{day}:AAPL",
+            {"symbol": "AAPL", "score": {"value": value, "as_of": day, "coverage": 1}},
+        )
+    assert client.get("/api/v1/watchlist/status").json()["data"][0]["score_change"] == 10
+    assert client.get("/api/v1/stocks/AAPL/analysis").status_code == 200
+    assert client.get("/api/v1/analysis-history").json()["data"][0]["symbol"] == "AAPL"

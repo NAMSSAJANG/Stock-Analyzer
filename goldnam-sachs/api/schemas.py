@@ -197,6 +197,7 @@ class ExecutionInput(WatchItem):
 
 
 class Backup(StrictModel):
+    legacy_history: list[dict[str, Any]] = Field(default_factory=list, max_length=10000)
     schema_version: Literal[1] = 1
     watchlist: list[WatchItem] = Field(default_factory=list, max_length=1000)
     journal: list[JournalRecord] = Field(default_factory=list, max_length=10000)

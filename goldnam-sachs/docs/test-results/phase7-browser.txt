@@ -1,0 +1,57 @@
+
+Running 6 tests using 1 worker
+
+(node:30096) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Skipping host requirements validation logic because `PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS` env variable is set.
+  ✓  1 [iphone] › e2e/mobile.spec.ts:14:1 › 로그인 → 검색 → 종목 → 스크리너, 테마와 오프라인 보호 (14.9s)
+  -  2 [iphone] › e2e/mobile.spec.ts:95:1 › Trade Lab 비용·시드·거래 일지·v6 가져오기
+(node:30537) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Skipping host requirements validation logic because `PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS` env variable is set.
+  ✓  3 [android] › e2e/mobile.spec.ts:14:1 › 로그인 → 검색 → 종목 → 스크리너, 테마와 오프라인 보호 (9.5s)
+  ✘  4 [android] › e2e/mobile.spec.ts:95:1 › Trade Lab 비용·시드·거래 일지·v6 가져오기 (7.8s)
+(node:30921) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Skipping host requirements validation logic because `PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS` env variable is set.
+  ✓  5 [desktop] › e2e/mobile.spec.ts:14:1 › 로그인 → 검색 → 종목 → 스크리너, 테마와 오프라인 보호 (5.2s)
+  -  6 [desktop] › e2e/mobile.spec.ts:95:1 › Trade Lab 비용·시드·거래 일지·v6 가져오기
+
+
+  1) [android] › e2e/mobile.spec.ts:95:1 › Trade Lab 비용·시드·거래 일지·v6 가져오기 ───────────────────────────
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('20261123', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('20261123', { exact: true }) with timeout 5000ms
+      - waiting for getByText('20261123', { exact: true })
+
+
+      117 |   await page.getByRole("tab", { name: "기대값·연속손실" }).click();
+      118 |   await page.getByRole("button", { name: "계산하기", exact: true }).click();
+    > 119 |   await expect(page.getByText("20261123", { exact: true })).toBeVisible();
+          |                                                             ^
+      120 |   await shot(page, "trade", testInfo.project.name);
+      121 |   await page.goto("/journal/");
+      122 |   await page.getByRole("button", { name: "거래 기록", exact: true }).click();
+        at /workspace/Stock-Analyzer/goldnam-sachs/web/e2e/mobile.spec.ts:119:61
+
+    Error Context: test-results/mobile-Trade-Lab-비용·시드·거래-일지·v6-가져오기-android/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/mobile-Trade-Lab-비용·시드·거래-일지·v6-가져오기-android/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/mobile-Trade-Lab-비용·시드·거래-일지·v6-가져오기-android/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [android] › e2e/mobile.spec.ts:95:1 › Trade Lab 비용·시드·거래 일지·v6 가져오기 ────────────────────────────
+  2 skipped
+  3 passed (43.1s)

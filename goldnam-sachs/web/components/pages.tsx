@@ -13,12 +13,14 @@ import {
   FlaskConical,
   Plus,
   Search as SearchIcon,
-  ShieldCheck,
   Trash2,
 } from "lucide-react";
 import {
   Bar,
   BarChart,
+  LineChart,
+  Line,
+  ReferenceLine,
   CartesianGrid,
   ResponsiveContainer,
   Tooltip,
@@ -44,6 +46,7 @@ import {
   Warnings,
 } from "./ui";
 import brands from "../theme/brands.json";
+import { HistoryPanel, JournalComparison, AnalysisHistory } from "./history";
 const ZoneChart = dynamic(() => import("./zone-chart"), {
   ssr: false,
   loading: () => <Loading />,
@@ -153,7 +156,15 @@ function MarketCard({ market }: { market: "us" | "kr" }) {
   );
 }
 export function Home() {
-  const watch = useResource<Schema["WatchItem"][]>("/watchlist");
+  const watch = useResource<
+    {
+      symbol: string;
+      score: number | null;
+      score_change: number | null;
+      timing: string | null;
+      previous_timing: string | null;
+    }[]
+  >("/watchlist/status");
   const scores = useResource<Schema["Screener"]>(
     "/universe/us/scores?page_size=5&actionable=true",
   );
@@ -191,6 +202,13 @@ export function Home() {
                   href={`/stock/?symbol=${encodeURIComponent(row.symbol)}`}
                 >
                   <Ticker row={row} />
+                  <span className="watch-meta">
+                    {row.score ?? "—"}{" "}
+                    {row.score_change != null
+                      ? `(${row.score_change > 0 ? "+" : ""}${row.score_change})`
+                      : ""}
+                    <small>{STATES[row.timing ?? ""] ?? "미확인"}</small>
+                  </span>
                   <span className="row-arrow">
                     <ChevronRight size={17} />
                   </span>
@@ -1047,6 +1065,7 @@ type ValidationReport = {
   rankings?: Record<
     string,
     {
+      ic_series?: { date: string; ic: number | null }[];
       ic_mean?: number;
       ic_t?: number;
       evidence?: string;
@@ -1163,6 +1182,47 @@ export function Evidence() {
               </div>
             ) : (
               <EmptyState title="충분한 분위별 표본이 없습니다" />
+            )}
+          </section>
+          <section className="panel">
+            <SectionHead
+              title="월별 IC"
+              detail="가격 모멘텀 · 63일 · 중첩 수익률"
+            />
+            {ranking?.ic_series?.length ? (
+              <div className="chart-box">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={ranking.ic_series}>
+                    <CartesianGrid stroke="var(--border)" />
+                    <XAxis
+                      dataKey="date"
+                      stroke="var(--muted)"
+                      fontSize={10}
+                      tickFormatter={(v) => String(v).slice(0, 7)}
+                    />
+                    <YAxis stroke="var(--muted)" fontSize={11} />
+                    <ReferenceLine y={0} stroke="var(--muted)" />
+                    <Tooltip
+                      contentStyle={{
+                        background: "var(--panel)",
+                        border: "1px solid var(--border)",
+                      }}
+                    />
+                    <Line
+                      dataKey="ic"
+                      name="IC"
+                      stroke="var(--foreground)"
+                      dot={false}
+                      connectNulls={false}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <EmptyState
+                title="월별 IC 시계열이 없습니다"
+                detail="검증 배치를 실행하세요."
+              />
             )}
           </section>
           <section className="panel">
@@ -1445,6 +1505,7 @@ export function Journal() {
               </span>
             </div>
             {row.notes && <p>{row.notes}</p>}
+            <JournalComparison row={row} />
           </article>
         ))
       ) : !r.loading && !r.error ? (
@@ -1455,6 +1516,8 @@ export function Journal() {
           />
         </section>
       ) : null}
+      <AnalysisHistory />
+      <HistoryPanel />
     </>
   );
 }
@@ -1759,276 +1822,7 @@ function SettingsForm({ initial }: { initial: Schema["Settings"] }) {
     </div>
   );
 }
-export function Trade() {
-  const [mode, setMode] = useState("position");
-  const [result, setResult] = useState<unknown>(null);
-  const [message, setMessage] = useState("");
-  const [busy, setBusy] = useState(false);
-  async function submit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setBusy(true);
-    setMessage("");
-    const form = new FormData(e.currentTarget);
-    const n = (key: string, fallback = 0) => Number(form.get(key) ?? fallback);
-    try {
-      let response;
-      if (mode === "expectancy")
-        response = await post("/trade-lab/simulate", {
-          kind: "loss_streak",
-          win_fraction: n("win", 50) / 100,
-          payoff_ratio: n("payoff", 2),
-          risk_fraction: n("risk", 1) / 100,
-          seed: 20261123,
-        });
-      else if (mode === "stress")
-        response = await post("/trade-lab/simulate", {
-          kind: "path",
-          shares: n("shares", 10),
-          average: n("entry", 100),
-          cash: n("cash", 10000),
-          path: String(form.get("path")).split(",").map(Number),
-          rules: [],
-        });
-      else if (mode === "ladder")
-        response = await post("/trade-lab/plan", {
-          kind: "ladder",
-          cash: n("cash", 10000),
-          prices: String(form.get("prices")).split(",").map(Number),
-          weights: String(form.get("weights")).split(",").map(Number),
-          reserve_pct: n("reserve", 0),
-        });
-      else
-        response = await post("/trade-lab/plan", {
-          kind: mode,
-          account: n("account", 100000),
-          cash: n("cash", 100000),
-          entry: n("entry", 100),
-          stop: n("stop", 95),
-          target: n("target", 110),
-          risk_pct: n("risk", 1),
-          shares: n("shares", 10),
-          average: n("average", 100),
-        });
-      setResult(response.data);
-    } catch (e) {
-      setMessage(e instanceof Error ? e.message : "계산 실패");
-    } finally {
-      setBusy(false);
-    }
-  }
-  function csv() {
-    const raw = result as Record<string, unknown>;
-    const rows = Array.isArray(result)
-      ? result
-      : Array.isArray(raw?.rows)
-        ? raw.rows
-        : [raw];
-    if (!rows.length) return;
-    const keys = Object.keys(rows[0]);
-    const cell = (v: unknown) => `"${String(v ?? "").replaceAll('"', '""')}"`;
-    download(
-      "goldnam-trade-lab.csv",
-      [
-        keys.map(cell).join(","),
-        ...rows.map((row) => keys.map((k) => cell(row[k])).join(",")),
-      ].join("\n"),
-      "text/csv;charset=utf-8",
-    );
-  }
-  const field = (
-    name: string,
-    label: string,
-    value: string,
-    type = "number",
-  ) => (
-    <label className="form-field" key={name}>
-      {label}
-      <input
-        name={name}
-        type={type}
-        inputMode={type === "number" ? "decimal" : "text"}
-        step="any"
-        defaultValue={value}
-        required
-      />
-    </label>
-  );
-  return (
-    <>
-      <PageHead
-        overline="PLAN BEFORE YOU ACT"
-        title="Trade Lab"
-        detail="비용과 손실 한도를 먼저 계산합니다. 계산 결과는 주문이 아닙니다."
-      />
-      <section className="panel">
-        <div className="tab-bar" role="tablist" aria-label="계산 종류">
-          {[
-            ["position", "수량·비용"],
-            ["ladder", "분할매수"],
-            ["target_average", "목표 평단"],
-            ["stress", "하락 스트레스"],
-            ["expectancy", "기대값·연속손실"],
-          ].map(([v, l]) => (
-            <button
-              role="tab"
-              aria-selected={mode === v}
-              key={v}
-              className={mode === v ? "active" : ""}
-              onClick={() => {
-                setMode(v);
-                setResult(null);
-              }}
-            >
-              {l}
-            </button>
-          ))}
-        </div>
-        <form onSubmit={submit} key={mode}>
-          <div className="form-grid">
-            {mode === "expectancy" ? (
-              <>
-                {field("win", "가정 승률 %", "50")}
-                {field("payoff", "가정 손익비 R", "2")}
-                {field("risk", "거래당 계좌 위험 %", "1")}
-              </>
-            ) : mode === "ladder" ? (
-              <>
-                {field("cash", "사용 가능 현금", "10000")}
-                {field("reserve", "현금 보존 %", "10")}
-                {field("prices", "매수가 · 쉼표 구분", "100,95,90", "text")}
-                {field("weights", "배분 가중치 · 쉼표 구분", "1,1,2", "text")}
-              </>
-            ) : mode === "stress" ? (
-              <>
-                {field("shares", "보유 수량", "10")}
-                {field("entry", "평균 매수가", "100")}
-                {field("cash", "현금", "10000")}
-                {field(
-                  "path",
-                  "가격 경로 · 쉼표 구분",
-                  "100,95,90,80,100",
-                  "text",
-                )}
-              </>
-            ) : mode === "target_average" ? (
-              <>
-                {field("shares", "보유 수량", "10")}
-                {field("average", "현재 평단", "100")}
-                {field("entry", "추가 매수가", "80")}
-                {field("target", "목표 평단", "90")}
-              </>
-            ) : (
-              <>
-                {field("account", "계좌 평가액", "100000")}
-                {field("cash", "사용 가능 현금", "100000")}
-                {field("entry", "진입가", "100")}
-                {field("stop", "손절가", "95")}
-                {field("target", "목표가", "110")}
-                {field("risk", "허용 손실 %", "1")}
-              </>
-            )}
-          </div>
-          <div className="form-actions">
-            <button className="button primary" disabled={busy}>
-              {busy ? "계산 중…" : "계산하기"}
-            </button>
-            <TextLink href="/settings/">비용 가정 설정</TextLink>
-          </div>
-        </form>
-        {message && (
-          <p role="alert" className="caution">
-            {message}
-          </p>
-        )}
-      </section>
-      {result != null && (
-        <section className="panel" style={{ marginTop: 22 }}>
-          <SectionHead
-            title="계산 결과"
-            action={
-              <button className="button small" onClick={csv}>
-                <ArrowDownToLine size={14} />
-                CSV
-              </button>
-            }
-          />
-          <ResultView result={result} />
-        </section>
-      )}
-      <div className="research-note" style={{ marginTop: 22 }}>
-        <ShieldCheck size={22} />
-        <div>
-          <strong>가정은 결과를 바꿉니다.</strong>Decimal 기반 비용 계산입니다.
-          시뮬레이션은 고정 시드의 가정 실험이며 실제 미래 성과를 예측하지
-          않습니다. 통화 선택은 표시 단위이고 환전이 아닙니다.
-        </div>
-      </div>
-    </>
-  );
-}
-function ResultView({ result }: { result: unknown }) {
-  if (Array.isArray(result))
-    return (
-      <div className="stack">
-        {result.map((row, i) => (
-          <div className="journal-card" key={i}>
-            <h3>{i + 1} 단계</h3>
-            <ResultView result={row} />
-          </div>
-        ))}
-      </div>
-    );
-  if (result && typeof result === "object") {
-    const record = result as Record<string, unknown>;
-    return (
-      <>
-        <dl className="details-list">
-          {Object.entries(record)
-            .filter(
-              ([, v]) =>
-                typeof v === "number" || typeof v === "string" || v === null,
-            )
-            .map(([key, value]) => (
-              <div key={key}>
-                <dt>
-                  {{
-                    expected_r: "거래당 기대값 R",
-                    break_even_win_fraction: "손익분기 승률 (0~1)",
-                    simulations: "시뮬레이션 횟수",
-                    trades: "거래 횟수",
-                    seed: "난수 시드",
-                    note: "해석",
-                  }[key] ?? key}
-                </dt>
-                <dd>
-                  {typeof value === "number"
-                    ? money(value)
-                    : String(value ?? "—")}
-                </dd>
-              </div>
-            ))}
-        </dl>
-        {Array.isArray(record.rows) && <ResultView result={record.rows} />}
-        {record.loss_streak && (
-          <>
-            <SectionHead
-              title="최대 연속 손실 분포"
-              detail="100회 거래 × 10,000회 가정 실험"
-            />
-            <ResultView result={record.loss_streak} />
-          </>
-        )}
-        {record.max_drawdown && (
-          <>
-            <SectionHead title="최대 낙폭 분포" />
-            <ResultView result={record.max_drawdown} />
-          </>
-        )}
-      </>
-    );
-  }
-  return <p>{String(result)}</p>;
-}
+export { Trade } from "./trade-lab";
 
 function MarketOverview({ market }: { market: string }) {
   const r = useResource<{

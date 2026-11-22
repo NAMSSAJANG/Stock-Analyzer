@@ -56,3 +56,22 @@ def test_portfolio_cap_updates_all_money_and_gap_risk():
     assert gap["손절 예상손실"] <= 1000
     assert gap["주당 손실"] == 14.5
     assert gap["projected_heat_pct"] == pytest.approx(gap["손절 예상손실"] / 1000)
+
+
+def test_daily_timing_missing_benchmark_fails_closed():
+    from goldnam_engine.scoring.snapshot import timing_snapshot
+
+    from engine.tests.smoke_test import make_momentum
+
+    frame, benchmark = make_momentum()
+    missing = timing_snapshot(frame, None, "us")
+    assert missing["risk"] is None and not missing["actionable"]
+    actual = timing_snapshot(frame, benchmark, "us")
+    assert actual["risk"]["earnings"] == "발표일 미확인"
+    assert (
+        actual["timing"]["preferred"] != "Momentum"
+        or actual["timing"]["momentum"]["status"] != "EXTENDED"
+    )
+    kr_missing_fx = timing_snapshot(frame, benchmark, "kr")
+    assert kr_missing_fx["risk"]["score"] is None
+    assert kr_missing_fx["risk"]["position_size_multiplier"] == 0

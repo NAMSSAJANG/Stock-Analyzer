@@ -1,0 +1,21 @@
+
+Running 6 tests using 1 worker
+
+(node:36472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Skipping host requirements validation logic because `PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS` env variable is set.
+  ✓  1 [iphone] › e2e/mobile.spec.ts:14:1 › 로그인 → 검색 → 종목 → 스크리너, 테마와 오프라인 보호 (11.7s)
+  -  2 [iphone] › e2e/mobile.spec.ts:95:1 › Trade Lab 비용·시드·거래 일지·v6 가져오기
+(node:36743) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Skipping host requirements validation logic because `PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS` env variable is set.
+  ✓  3 [android] › e2e/mobile.spec.ts:14:1 › 로그인 → 검색 → 종목 → 스크리너, 테마와 오프라인 보호 (4.8s)
+  ✓  4 [android] › e2e/mobile.spec.ts:95:1 › Trade Lab 비용·시드·거래 일지·v6 가져오기 (2.7s)
+(node:37146) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Skipping host requirements validation logic because `PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS` env variable is set.
+  ✓  5 [desktop] › e2e/mobile.spec.ts:14:1 › 로그인 → 검색 → 종목 → 스크리너, 테마와 오프라인 보호 (4.7s)
+  -  6 [desktop] › e2e/mobile.spec.ts:95:1 › Trade Lab 비용·시드·거래 일지·v6 가져오기
+
+  2 skipped
+  4 passed (28.2s)

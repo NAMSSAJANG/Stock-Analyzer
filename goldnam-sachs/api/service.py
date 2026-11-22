@@ -303,8 +303,19 @@ class AnalysisService:
             },
         }
         clean = cast(dict[str, Any], serialize(payload))
+        analysis = Analysis.model_validate(clean)
+        self.store.put(
+            "analysis_history",
+            f"{as_of}:{symbol}",
+            {
+                "symbol": symbol,
+                "date": str(as_of),
+                "score_version": "score-v0.1",
+                "snapshot": analysis.model_dump(mode="json"),
+            },
+        )
         return Envelope(
-            data=Analysis.model_validate(clean),
+            data=analysis,
             meta=Meta(as_of=str(as_of), coverage=base["score"]["coverage"], sources=sources),
             warnings=warnings,
         )

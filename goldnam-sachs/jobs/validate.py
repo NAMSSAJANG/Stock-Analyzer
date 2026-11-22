@@ -127,6 +127,14 @@ def run(
             )
             if partial:
                 summary["evidence"] = "미검증"
+            summary["ic_series"] = (
+                [
+                    {"date": str(day)[:10], "ic": float(value) if pd.notna(value) else None}
+                    for day, value in detail.ic.items()
+                ]
+                if "ic" in detail
+                else []
+            )
             report["rankings"][f"{name}-{horizon}"] = summary
             detail.to_parquet(output / f"{name}-{horizon}.parquet")
     report["price_factor_correlation"] = float(momentum.corrwith(trend, axis=1).mean())
@@ -195,7 +203,14 @@ def main() -> None:
         args.workers,
     )
     if args.save_db:
-        Store().put("validation", args.market, result)
+        compact = {
+            **result,
+            "portfolios": {
+                k: {name: value for name, value in portfolio.items() if name != "curve"}
+                for k, portfolio in result["portfolios"].items()
+            },
+        }
+        Store().put("validation", args.market, compact)
     print(
         json.dumps(
             {

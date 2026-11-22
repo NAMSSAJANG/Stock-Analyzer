@@ -116,7 +116,11 @@ def create_app(
         )
         if request.method in {"POST", "PUT", "PATCH", "DELETE"}:
             origin = request.headers.get("origin")
-            expected = os.getenv("PUBLIC_BASE_URL", str(request.base_url).rstrip("/")).rstrip("/")
+            expected = (
+                os.getenv("PUBLIC_BASE_URL")
+                or os.getenv("RENDER_EXTERNAL_URL")
+                or str(request.base_url)
+            ).rstrip("/")
             if origin and origin.rstrip("/") != expected:
                 return problem(403, "요청 차단", "허용하지 않은 출처")
             if request.headers.get("sec-fetch-site") == "cross-site":
@@ -357,6 +361,36 @@ def create_app(
         db().remove("watchlist", symbol_checked(symbol))
         return Envelope(data={"deleted": True})
 
+    @application.get("/api/v1/analysis-history", response_model=Envelope[list[dict[str, Any]]])
+    def analysis_history() -> Envelope[list[dict[str, Any]]]:
+        return Envelope(data=db().list("analysis_history", limit=100))
+
+    @application.get("/api/v1/watchlist/status", response_model=Envelope[list[dict[str, Any]]])
+    def watch_status() -> Envelope[list[dict[str, Any]]]:
+        snapshots = db().list("scores")
+        result = []
+        for watch in db().list("watchlist"):
+            rows = [r for r in snapshots if r.get("symbol") == watch["symbol"]][:2]
+            latest = rows[0] if rows else {}
+            previous = rows[1] if len(rows) > 1 else {}
+            current = (latest.get("score") or {}).get("value")
+            before = (previous.get("score") or {}).get("value")
+            timing = ((latest.get("timing") or {}).get("pullback") or {}).get("status")
+            prev_timing = ((previous.get("timing") or {}).get("pullback") or {}).get("status")
+            result.append(
+                {
+                    "symbol": watch["symbol"],
+                    "score": current,
+                    "score_change": current - before
+                    if current is not None and before is not None
+                    else None,
+                    "timing": timing,
+                    "previous_timing": prev_timing,
+                    "as_of": (latest.get("score") or {}).get("as_of"),
+                }
+            )
+        return Envelope(data=result)
+
     @application.get("/api/v1/history", response_model=Envelope[list[dict[str, Any]]])
     def history() -> Envelope[list[dict[str, Any]]]:
         return Envelope(
@@ -380,8 +414,16 @@ def create_app(
 
         symbol = symbol_checked(body.symbol)
         identifier = str(uuid4())
-        # Snapshot only a score known for the user's trade date; never backdate today's analysis.
-        snapshot = db().get("scores", f"{market_for(symbol)}:{body.date}:{symbol}") or {}
+        # Date-only entries: use a strictly earlier close, never the trade day's future close.
+        snapshot = next(
+            (
+                row
+                for row in db().list("scores", f"{market_for(symbol)}:")
+                if row.get("symbol") == symbol
+                and (row.get("score") or {}).get("as_of", "9999") < str(body.date)
+            ),
+            {},
+        )
         record = JournalRecord(
             **body.model_dump(exclude={"symbol"}),
             symbol=symbol,
@@ -416,16 +458,33 @@ def create_app(
     def export() -> Envelope[Backup]:
         return Envelope(
             data=Backup(
-                watchlist=watchlist().data, journal=journal().data, settings=settings().data
+                watchlist=watchlist().data,
+                journal=journal().data,
+                settings=settings().data,
+                legacy_history=db().list("legacy_history"),
             )
         )
 
     @application.post("/api/v1/import", response_model=Envelope[dict[str, int]])
     def import_backup(body: Backup) -> Envelope[dict[str, int]]:
+        from jobs.import_v6_history import normalize, save
+
+        legacy = normalize(
+            [
+                {
+                    **r.get("scores", {}),
+                    "symbol": r.get("symbol"),
+                    "date": r.get("date"),
+                    "metadata": r.get("metadata", {}),
+                }
+                for r in body.legacy_history
+            ]
+        )
         # Merge, do not delete existing records. Validation completes before any write.
         db().put_many("watchlist", [(r.symbol, r.model_dump()) for r in body.watchlist])
         db().put_many("journal", [(r.id, r.model_dump(mode="json")) for r in body.journal])
         db().put("settings", "user", body.settings.model_dump(mode="json"))
+        save(legacy, db())
         return Envelope(data={"watchlist": len(body.watchlist), "journal": len(body.journal)})
 
     @application.post(

@@ -1553,3 +1553,20 @@ textarea {
   padding: 8px;
   font-size: 12px;
 }
+summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: var(--foreground);
+}
+.watch-meta {
+  margin-left: auto;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.watch-meta small {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+}

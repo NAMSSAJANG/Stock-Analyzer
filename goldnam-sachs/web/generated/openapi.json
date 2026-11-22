@@ -577,6 +577,42 @@
         }
       }
     },
+    "/api/v1/analysis-history": {
+      "get": {
+        "summary": "Analysis History",
+        "operationId": "analysis_history_api_v1_analysis_history_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_list_dict_str__Any___"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/watchlist/status": {
+      "get": {
+        "summary": "Watch Status",
+        "operationId": "watch_status_api_v1_watchlist_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_list_dict_str__Any___"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/history": {
       "get": {
         "summary": "History",
@@ -1187,6 +1223,15 @@
       },
       "Backup": {
         "properties": {
+          "legacy_history": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "maxItems": 10000,
+            "title": "Legacy History"
+          },
           "schema_version": {
             "type": "integer",
             "const": 1,

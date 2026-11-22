@@ -13,4 +13,9 @@ def main() -> None:
         from jobs.import_v6_history import main as run
     else:
         from jobs.daily_scores import main as run
-    run()
+    try:
+        run()
+    except Exception as exc:
+        raise SystemExit(
+            f"실행 실패: {type(exc).__name__}. 시크릿을 출력하지 않았습니다. 공급자 상태·설정·보고서를 확인하세요."
+        ) from None
