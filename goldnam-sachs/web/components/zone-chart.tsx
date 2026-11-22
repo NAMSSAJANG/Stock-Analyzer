@@ -30,7 +30,7 @@ export default function ZoneChart({
       layout: {
         background: { type: ColorType.Solid, color: color("--panel") },
         textColor: color("--muted"),
-        fontFamily: "Pretendard",
+        fontFamily: color("--body-font"),
         fontSize: 10,
         attributionLogo: true,
       },

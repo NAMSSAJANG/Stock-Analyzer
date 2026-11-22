@@ -1,0 +1,87 @@
+name: Goldnam research batches
+on:
+  schedule:
+    - cron: '50 6 * * 1-5'  # KRX 15:50 KST
+    - cron: '40 21 * * 1-5' # NYSE 16:40 EST / 17:40 EDT
+    - cron: '17 3 * * 6'    # Weekly validation
+  workflow_dispatch:
+    inputs:
+      kind:
+        type: choice
+        options: [daily, validate]
+        default: daily
+      market:
+        type: choice
+        options: [us, kr, both]
+        default: both
+      as_of:
+        description: 'Daily YYYY-MM-DD (empty: UTC today; holidays skip)'
+        required: false
+permissions:
+  contents: read
+concurrency:
+  group: goldnam-batch-${{ github.event.schedule || inputs.kind }}-${{ inputs.market || 'scheduled' }}
+  cancel-in-progress: false
+jobs:
+  calculate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        market: [us, kr]
+    defaults:
+      run:
+        working-directory: goldnam-sachs
+    env:
+      DATABASE_URL: ${{ secrets.GOLDNAM_DATABASE_URL }}
+      OPENDART_API_KEY: ${{ secrets.OPENDART_API_KEY }}
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+      MARKET: ${{ matrix.market }}
+      REQUESTED_MARKET: ${{ inputs.market }}
+      KIND: ${{ inputs.kind }}
+      SCHEDULE: ${{ github.event.schedule }}
+      BATCH_DAY: ${{ inputs.as_of }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: '0.13.9'
+          python-version: '3.12'
+      - name: Select run and require database secret
+        id: gate
+        run: |
+          if [ -z "$DATABASE_URL" ]; then
+            echo '::notice::GOLDNAM_DATABASE_URL absent; no database or batch was changed.'
+            exit 0
+          fi
+          if [ -n "$REQUESTED_MARKET" ] && [ "$REQUESTED_MARKET" != both ] && [ "$REQUESTED_MARKET" != "$MARKET" ]; then exit 0; fi
+          if [ "$SCHEDULE" = '50 6 * * 1-5' ] && [ "$MARKET" != kr ]; then exit 0; fi
+          if [ "$SCHEDULE" = '40 21 * * 1-5' ] && [ "$MARKET" != us ]; then exit 0; fi
+          echo 'enabled=true' >> "$GITHUB_OUTPUT"
+      - if: steps.gate.outputs.enabled == 'true'
+        run: uv sync --frozen --no-dev --extra api
+      - if: steps.gate.outputs.enabled == 'true'
+        uses: actions/cache@v4
+        with:
+          path: goldnam-sachs/.data/prices
+          key: goldnam-prices-${{ matrix.market }}-${{ github.run_id }}
+          restore-keys: goldnam-prices-${{ matrix.market }}-
+      - name: Execute without secret-bearing tracebacks
+        if: steps.gate.outputs.enabled == 'true'
+        run: |
+          mkdir -p .data/artifacts
+          if [ "$KIND" = validate ] || [ "$SCHEDULE" = '17 3 * * 6' ]; then
+            uv run --no-dev goldnam validate --market "$MARKET" --start 2015-01-01 --workers 2 --save-db --output ".data/artifacts/validation-$MARKET"
+          elif [ -n "$BATCH_DAY" ]; then
+            uv run --no-dev goldnam daily --market "$MARKET" --as-of "$BATCH_DAY" --output ".data/artifacts/daily-$MARKET.json"
+          else
+            uv run --no-dev goldnam daily --market "$MARKET" --scheduled --output ".data/artifacts/daily-$MARKET.json"
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always() && steps.gate.outputs.enabled == 'true'
+        with:
+          name: goldnam-${{ matrix.market }}-${{ github.run_id }}
+          path: goldnam-sachs/.data/artifacts
+          retention-days: 30
+          if-no-files-found: warn

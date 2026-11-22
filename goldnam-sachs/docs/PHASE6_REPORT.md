@@ -36,3 +36,7 @@ Lighthouse 13은 PWA category를 제공하지 않는다. PWA는 Playwright로 �
 변경: web/app·components·lib·theme·public, API 정적 호스트/조회 계약, 배치 타이밍/리스크, 브라우저 테스트, SVG/아이콘 생성 스크립트. 기록 가져오기 계약과 Trade Lab 비용/한도 보정도 후속 화면 연결을 위해 추가했다. Phase 7에서 가져오기·비교 화면과 원래 Trade Lab 회귀를 마무리한다.
 
 남은 외부 조건: PIT 키, 한국 유니버스 공급자 정상 응답, 실제 Render 배포 및 실물 홈 화면 추가. 이 작업에서는 배포하지 않는다.
+
+## 최종 재측정
+
+Lighthouse 로그인 성능/접근성/best-practices 100/100/100, 종목 73/100/100. HEAD 405 콘솔 오류 해결. 종목 화면의 레이아웃 이동/주 스레드 비용은 남아 있어 성능 100을 주장하지 않는다. [최종 원문](test-results/lighthouse-final.txt).

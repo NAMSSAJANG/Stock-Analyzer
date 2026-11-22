@@ -1,9 +1,9 @@
-name: Goldnam Phase 0 checks
+name: Goldnam checks
 on:
   pull_request:
     paths:
       - 'goldnam-sachs/**'
-      - '.github/workflows/goldnam-ci.yml'
+      - '.github/workflows/goldnam-*.yml'
   workflow_dispatch:
 permissions:
   contents: read
@@ -23,14 +23,14 @@ jobs:
       - run: uv run ruff check .
       - run: uv run ruff format --check .
       - run: uv run mypy
-      - run: uv run pytest --cov=goldnam_engine --cov-report=term-missing
+      - run: uv run pytest --cov=goldnam_engine --cov=api --cov=jobs --cov-report=term-missing
       - name: Preserved offline smoke and UI regressions
         run: |
           uv run python scripts/run_legacy_checks.py smoke_test.py
           uv run python scripts/run_legacy_checks.py test_trade_ui.py
           uv run python scripts/run_legacy_checks.py test_execution_ui.py
           uv run python scripts/run_legacy_checks.py test_analysis_ui.py
-      - run: docker compose -p goldnam-phase0 config --quiet
+      - run: docker compose -p goldnam-check config --quiet
       - run: uv run python scripts/validate_blueprint.py
   web:
     runs-on: ubuntu-latest
@@ -50,3 +50,40 @@ jobs:
       - run: pnpm build
         env:
           NEXT_TELEMETRY_DISABLED: '1'
+
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: goldnam-sachs
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: '0.13.9'
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: uv sync --frozen --all-groups --extra api
+      - run: npm install --global pnpm@12.21.0
+      - run: pnpm -C web install --frozen-lockfile
+      - run: uv run python scripts/export_openapi.py && pnpm -C web generate:api
+      - run: git diff --exit-code -- web/generated
+      - run: pnpm -C web build
+      - run: pnpm -C web exec playwright install --with-deps chromium webkit
+      - name: Run real same-origin HTTPS flow with offline fixture sources
+        run: |
+          openssl req -x509 -newkey rsa:2048 -nodes -keyout /tmp/goldnam-e2e.key -out /tmp/goldnam-e2e.crt -days 1 -subj '/CN=localhost' -addext 'subjectAltName=DNS:localhost,IP:127.0.0.1' 2>/dev/null
+          PYTHONPATH=. uv run python web/e2e/server.py > /tmp/goldnam-browser-server.log 2>&1 &
+          for attempt in $(seq 1 30); do curl -ksf https://localhost:8765/api/v1/health >/dev/null && break; sleep 1; done
+          pnpm -C web exec playwright test
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mobile-browser-results
+          path: |
+            goldnam-sachs/web/playwright-report
+            goldnam-sachs/docs/screenshots
+          retention-days: 14

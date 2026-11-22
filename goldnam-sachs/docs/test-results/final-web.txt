@@ -1,0 +1,49 @@
+$ eslint .
+$ tsc --noEmit
+$ vitest run
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - ESM syntax in a file loaded as CommonJS (vitest.config.ts:1:1). Use a `.mjs` extension or set `"type": "module"` in the closest package.json
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.1.1 /workspace/Stock-Analyzer/goldnam-sachs/web
+
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  04:44:05
+   Duration  149ms (import 41%, transform 27%, worker 18%, tests 13%)
+
+$ next build
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.mjs took 15ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 988ms
+  Running TypeScript ...
+  Finished TypeScript in 3.0s ...
+  Collecting page data using 4 workers ...
+  Generating static pages using 4 workers (0/12) ...
+  Generating static pages using 4 workers (3/12) 
+  Generating static pages using 4 workers (6/12) 
+  Generating static pages using 4 workers (9/12) 
+✓ Generating static pages using 4 workers (12/12) in 324ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /evidence
+├ ○ /journal
+├ ○ /login
+├ ○ /market
+├ ○ /screener
+├ ○ /search
+├ ○ /settings
+├ ○ /stock
+└ ○ /trade
+
+
+○  (Static)  prerendered as static content
+
+$ eslint .
+$ tsc --noEmit

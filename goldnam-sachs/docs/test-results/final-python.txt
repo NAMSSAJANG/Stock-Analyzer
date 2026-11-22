@@ -1,0 +1,98 @@
+............................................................ [ 44%]
+........................................................................ [ 98%]
+..                                                                       [100%]
+=============================== warnings summary ===============================
+../../.venv-goldnam/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /workspace/.venv-goldnam/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+engine/tests/test_data_v1.py::test_quality_exchange_sessions_and_stale
+engine/tests/test_data_v1.py::test_quality_exchange_sessions_and_stale
+engine/tests/test_data_v1.py::test_quality_exchange_sessions_and_stale
+engine/tests/test_data_v1.py::test_quality_exchange_sessions_and_stale
+engine/tests/test_data_v1.py::test_quality_exchange_sessions_and_stale
+engine/tests/test_data_v1.py::test_quality_exchange_sessions_and_stale
+engine/tests/test_data_v1.py::test_quality_exchange_sessions_and_stale
+engine/tests/test_data_v1.py::test_quality_exchange_sessions_and_stale
+  /workspace/.venv-goldnam/lib/python3.12/site-packages/pandas/core/series.py:848: Pandas4Warning: Series.values returning an ndarray that drops timezone information for DatetimeTZDtype is deprecated. In a future version, this will return the underlying DatetimeArray instead. Use 'Series.dt.tz_convert(None).to_numpy()' to get a NumPy array of UTC values, or 'Series.array' to get the ExtensionArray.
+  See https://pandas.pydata.org/docs/dev/whatsnew/v3.1.0.html#whatsnew-310-deprecations-values for more details.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.14-final-0 _______________
+
+Name                                                     Stmts   Miss  Cover   Missing
+--------------------------------------------------------------------------------------
+api/__init__.py                                              0      0   100%
+api/auth.py                                                 64      2    97%   53, 58
+api/main.py                                                291     18    94%   71, 81, 86, 91, 127, 130-131, 133, 136-137, 274, 291, 293, 337, 345, 558, 586, 591
+api/schemas.py                                             156      0   100%
+api/service.py                                             145     47    68%   55-96, 101, 175, 197-228, 245, 256, 272-283
+api/tests/test_api.py                                      201      0   100%
+api/tests/test_health.py                                     8      0   100%
+api/tests/test_postgres.py                                  20     15    25%   9-24
+engine/goldnam_engine/__init__.py                            2      0   100%
+engine/goldnam_engine/_version.py                            3      0   100%
+engine/goldnam_engine/data/__init__.py                       0      0   100%
+engine/goldnam_engine/data/contracts.py                     25      0   100%
+engine/goldnam_engine/data/dart.py                         145     29    80%   26, 38, 42-52, 55, 65-66, 72-75, 88, 95-96, 109-115, 149-151, 164, 167, 182, 185-186
+engine/goldnam_engine/data/fundamentals.py                 114      3    97%   123-124, 199
+engine/goldnam_engine/data/history_store.py                 68      0   100%
+engine/goldnam_engine/data/korean_stock_search.py           59      5    92%   18, 24, 32, 52-54
+engine/goldnam_engine/data/market_data.py                   95      0   100%
+engine/goldnam_engine/data/parquet_cache.py                 33      1    97%   26
+engine/goldnam_engine/data/quality.py                       55      1    98%   33
+engine/goldnam_engine/data/resilience.py                    66      0   100%
+engine/goldnam_engine/data/scanner_engine.py                86     67    22%   62, 66-118, 122-129, 138-204, 208-221
+engine/goldnam_engine/data/store.py                         47      3    94%   41, 43, 51
+engine/goldnam_engine/data/transport.py                     26      6    77%   18-20, 29-30, 36
+engine/goldnam_engine/data/universe.py                      78     24    69%   22-82, 97
+engine/goldnam_engine/factors/__init__.py                    0      0   100%
+engine/goldnam_engine/factors/company_engine.py             73      2    97%   220, 247
+engine/goldnam_engine/factors/cross_section.py              44      0   100%
+engine/goldnam_engine/factors/options_analyzer.py          186      8    96%   47-48, 68, 234, 300, 302, 304, 340
+engine/goldnam_engine/factors/technical_engine.py           78      1    99%   62
+engine/goldnam_engine/models.py                            111      0   100%
+engine/goldnam_engine/regime/__init__.py                     0      0   100%
+engine/goldnam_engine/regime/current.py                     14      0   100%
+engine/goldnam_engine/regime/market_regime.py               98      1    99%   45
+engine/goldnam_engine/risk/__init__.py                       0      0   100%
+engine/goldnam_engine/risk/current.py                       60      2    97%   76, 78
+engine/goldnam_engine/risk/portfolio.py                     31      1    97%   58
+engine/goldnam_engine/risk/risk_engine.py                   40      2    95%   62, 64
+engine/goldnam_engine/scoring/__init__.py                    0      0   100%
+engine/goldnam_engine/scoring/consensus_engine.py           74     14    81%   14, 24, 97-98, 100-101, 103-104, 109-110, 115, 117, 119, 125
+engine/goldnam_engine/scoring/cross_section.py              82      0   100%
+engine/goldnam_engine/scoring/lenses.py                     12      0   100%
+engine/goldnam_engine/scoring/opportunity_engine.py         14      0   100%
+engine/goldnam_engine/scoring/quant_engine.py               58      3    95%   104-106
+engine/goldnam_engine/scoring/scoring_utils.py              41      9    78%   37, 40-46, 54
+engine/goldnam_engine/scoring/snapshot.py                   20      1    95%   27
+engine/goldnam_engine/strategy.py                           27      0   100%
+engine/goldnam_engine/timing/__init__.py                     0      0   100%
+engine/goldnam_engine/timing/current.py                     98      3    97%   43, 46, 163
+engine/goldnam_engine/timing/setup_engine.py                98     10    90%   42, 45, 63-64, 79, 112, 120, 156, 160, 241
+engine/goldnam_engine/timing/sr_engine.py                   74      6    92%   34, 37, 45, 75, 77, 82
+engine/goldnam_engine/trade/__init__.py                      0      0   100%
+engine/goldnam_engine/trade/cost_defaults.py                 3      3     0%   3-9
+engine/goldnam_engine/trade/execution_engine.py             85      8    91%   31, 33, 37, 48, 50, 52, 56, 65
+engine/goldnam_engine/trade/exits.py                        89      3    97%   43, 89, 91
+engine/goldnam_engine/trade/lab.py                          18      1    94%   17
+engine/goldnam_engine/trade/trade_core.py                  196     15    92%   28, 30, 59, 61, 67, 79, 117, 156, 161, 174, 209, 249, 297, 304, 306
+engine/goldnam_engine/trade/trade_engine.py                  9      0   100%
+engine/goldnam_engine/validation/__init__.py                 0      0   100%
+engine/goldnam_engine/validation/calibration_cache.py       16      0   100%
+engine/goldnam_engine/validation/calibration_engine.py     147      6    96%   111, 140, 142, 169-170, 211
+engine/goldnam_engine/validation/events.py                 116     10    91%   20, 51, 53, 88-89, 95, 140-141, 164-165
+engine/goldnam_engine/validation/ranking.py                 82      1    99%   128
+engine/goldnam_engine/validation/series.py                  98      2    98%   141, 200
+jobs/__init__.py                                             0      0   100%
+jobs/cli.py                                                 14     14     0%   3-19
+jobs/daily_scores.py                                        87     87     0%   3-142
+jobs/import_v6_history.py                                   61     15    75%   30, 36, 53, 72, 81, 84, 94-101, 105
+jobs/validate.py                                           128    128     0%   3-233
+--------------------------------------------------------------------------------------
+TOTAL                                                     4269    577    86%
+Required test coverage of 85.0% reached. Total coverage: 86.48%
+134 passed, 13 deselected, 9 warnings, 12 subtests passed in 43.87s

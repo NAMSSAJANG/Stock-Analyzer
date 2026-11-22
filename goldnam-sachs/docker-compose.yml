@@ -1,4 +1,4 @@
-# Local Phase 0 scaffold. API is liveness-only; database wiring comes later.
+# Local only. Same app + DB architecture; no Render resources are created.
 services:
   db:
     image: postgres:18-alpine
@@ -13,18 +13,17 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
-  api:
+  app:
     build: .
-    ports: ["127.0.0.1:8000:8000"]
+    ports: ["127.0.0.1:10000:10000"]
     environment:
       DATABASE_URL: postgresql://goldnam@db:5432/goldnam
+      APP_PASSCODE_HASH: ${APP_PASSCODE_HASH:-}
+      SESSION_SECRET: ${SESSION_SECRET:-}
+      OPENDART_API_KEY: ${OPENDART_API_KEY:-}
+      SEC_USER_AGENT: ${SEC_USER_AGENT:-}
     depends_on:
       db:
         condition: service_healthy
-  web:
-    build:
-      context: .
-      dockerfile: web/Dockerfile
-    ports: ["127.0.0.1:3000:80"]
 volumes:
   pgdata:
