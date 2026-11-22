@@ -1,0 +1,5 @@
+GET http://127.0.0.1:8000/health -> HTTP 200
+{"status":"scaffold","version":"0.0.0-a.1"}
+GET http://127.0.0.1:3000/ -> HTTP 200
+Static scaffold heading and Korean placeholder: PASS
+/run/postgresql:5432 - accepting connections

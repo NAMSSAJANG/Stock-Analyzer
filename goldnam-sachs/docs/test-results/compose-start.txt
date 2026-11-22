@@ -1,0 +1,121 @@
+ db Pulling 
+ 881fc932939e Already exists 
+ e69a9c2fdea7 Pulling fs layer 
+ 4721f81aac5e Pulling fs layer 
+ 3f4dea45886b Pulling fs layer 
+ 1645cfdb7f22 Pulling fs layer 
+ f2d7cafd5afd Pulling fs layer 
+ bbd27b019c4a Pulling fs layer 
+ 45e02dc2fee3 Pulling fs layer 
+ 1645cfdb7f22 Waiting 
+ f2d7cafd5afd Waiting 
+ bbd27b019c4a Waiting 
+ 45e02dc2fee3 Waiting 
+ 4721f81aac5e Downloading [=>                                                 ]  24.58kB/901.1kB
+ e69a9c2fdea7 Downloading [==================================================>]     993B/993B
+ e69a9c2fdea7 Verifying Checksum 
+ e69a9c2fdea7 Download complete 
+ e69a9c2fdea7 Extracting [==================================================>]     993B/993B
+ 4721f81aac5e Verifying Checksum 
+ e69a9c2fdea7 Extracting [==================================================>]     993B/993B
+ 4721f81aac5e Download complete 
+ 3f4dea45886b Downloading [==================================================>]     116B/116B
+ 3f4dea45886b Verifying Checksum 
+ 3f4dea45886b Download complete 
+ e69a9c2fdea7 Pull complete 
+ 4721f81aac5e Extracting [=>                                                 ]  32.77kB/901.1kB
+ 4721f81aac5e Extracting [==================================================>]  901.1kB/901.1kB
+ 4721f81aac5e Pull complete 
+ 3f4dea45886b Extracting [==================================================>]     116B/116B
+ 3f4dea45886b Extracting [==================================================>]     116B/116B
+ 3f4dea45886b Pull complete 
+ 1645cfdb7f22 Downloading [>                                                  ]    538kB/115.5MB
+ f2d7cafd5afd Downloading [=========>                                         ]  3.487kB/19kB
+ f2d7cafd5afd Downloading [==================================================>]     19kB/19kB
+ f2d7cafd5afd Verifying Checksum 
+ f2d7cafd5afd Download complete 
+ bbd27b019c4a Downloading [============================>                      ]  3.488kB/6.1kB
+ bbd27b019c4a Downloading [==================================================>]    6.1kB/6.1kB
+ bbd27b019c4a Download complete 
+ 1645cfdb7f22 Downloading [==>                                                ]   5.83MB/115.5MB
+ 1645cfdb7f22 Downloading [===>                                               ]   7.43MB/115.5MB
+ 45e02dc2fee3 Downloading [==================================================>]     184B/184B
+ 45e02dc2fee3 Verifying Checksum 
+ 45e02dc2fee3 Download complete 
+ 1645cfdb7f22 Downloading [=====>                                             ]  13.82MB/115.5MB
+ 1645cfdb7f22 Downloading [========>                                          ]   20.2MB/115.5MB
+ 1645cfdb7f22 Downloading [===========>                                       ]  26.05MB/115.5MB
+ 1645cfdb7f22 Downloading [=============>                                     ]  30.85MB/115.5MB
+ 1645cfdb7f22 Downloading [===============>                                   ]  35.14MB/115.5MB
+ 1645cfdb7f22 Downloading [================>                                  ]  38.89MB/115.5MB
+ 1645cfdb7f22 Downloading [===================>                               ]  44.28MB/115.5MB
+ 1645cfdb7f22 Downloading [=====================>                             ]  49.11MB/115.5MB
+ 1645cfdb7f22 Downloading [=======================>                           ]  53.88MB/115.5MB
+ 1645cfdb7f22 Downloading [=========================>                         ]  59.16MB/115.5MB
+ 1645cfdb7f22 Downloading [===========================>                       ]  63.92MB/115.5MB
+ 1645cfdb7f22 Downloading [=============================>                     ]   69.2MB/115.5MB
+ 1645cfdb7f22 Downloading [================================>                  ]  74.49MB/115.5MB
+ 1645cfdb7f22 Downloading [=================================>                 ]  77.66MB/115.5MB
+ 1645cfdb7f22 Downloading [===================================>               ]  82.41MB/115.5MB
+ 1645cfdb7f22 Downloading [=====================================>             ]   87.7MB/115.5MB
+ 1645cfdb7f22 Downloading [=======================================>           ]  90.34MB/115.5MB
+ 1645cfdb7f22 Downloading [=========================================>         ]  95.09MB/115.5MB
+ 1645cfdb7f22 Downloading [===========================================>       ]  99.32MB/115.5MB
+ 1645cfdb7f22 Downloading [============================================>      ]    102MB/115.5MB
+ 1645cfdb7f22 Downloading [==============================================>    ]  107.2MB/115.5MB
+ 1645cfdb7f22 Downloading [================================================>  ]  112.5MB/115.5MB
+ 1645cfdb7f22 Verifying Checksum 
+ 1645cfdb7f22 Download complete 
+ 1645cfdb7f22 Extracting [>                                                  ]  557.1kB/115.5MB
+ 1645cfdb7f22 Extracting [=>                                                 ]  3.342MB/115.5MB
+ 1645cfdb7f22 Extracting [====>                                              ]   9.47MB/115.5MB
+ 1645cfdb7f22 Extracting [======>                                            ]  15.04MB/115.5MB
+ 1645cfdb7f22 Extracting [========>                                          ]  20.05MB/115.5MB
+ 1645cfdb7f22 Extracting [============>                                      ]  28.97MB/115.5MB
+ 1645cfdb7f22 Extracting [===============>                                   ]  35.65MB/115.5MB
+ 1645cfdb7f22 Extracting [=================>                                 ]  40.67MB/115.5MB
+ 1645cfdb7f22 Extracting [====================>                              ]  47.91MB/115.5MB
+ 1645cfdb7f22 Extracting [========================>                          ]  55.71MB/115.5MB
+ 1645cfdb7f22 Extracting [==========================>                        ]  60.72MB/115.5MB
+ 1645cfdb7f22 Extracting [============================>                      ]  66.85MB/115.5MB
+ 1645cfdb7f22 Extracting [================================>                  ]  74.09MB/115.5MB
+ 1645cfdb7f22 Extracting [===================================>               ]  81.89MB/115.5MB
+ 1645cfdb7f22 Extracting [====================================>              ]  84.12MB/115.5MB
+ 1645cfdb7f22 Extracting [====================================>              ]  84.67MB/115.5MB
+ 1645cfdb7f22 Extracting [=====================================>             ]  85.79MB/115.5MB
+ 1645cfdb7f22 Extracting [======================================>            ]  88.57MB/115.5MB
+ 1645cfdb7f22 Extracting [=======================================>           ]  91.91MB/115.5MB
+ 1645cfdb7f22 Extracting [=========================================>         ]  95.81MB/115.5MB
+ 1645cfdb7f22 Extracting [===========================================>       ]  100.3MB/115.5MB
+ 1645cfdb7f22 Extracting [============================================>      ]  102.5MB/115.5MB
+ 1645cfdb7f22 Extracting [================================================>  ]  113.1MB/115.5MB
+ 1645cfdb7f22 Extracting [==================================================>]  115.5MB/115.5MB
+ 1645cfdb7f22 Pull complete 
+ f2d7cafd5afd Extracting [==================================================>]     19kB/19kB
+ f2d7cafd5afd Extracting [==================================================>]     19kB/19kB
+ f2d7cafd5afd Pull complete 
+ bbd27b019c4a Extracting [==================================================>]    6.1kB/6.1kB
+ bbd27b019c4a Extracting [==================================================>]    6.1kB/6.1kB
+ bbd27b019c4a Pull complete 
+ 45e02dc2fee3 Extracting [==================================================>]     184B/184B
+ 45e02dc2fee3 Extracting [==================================================>]     184B/184B
+ 45e02dc2fee3 Pull complete 
+ db Pulled 
+ Network goldnam-phase0_default  Creating
+ Network goldnam-phase0_default  Created
+ Volume goldnam-phase0_pgdata  Creating
+ Volume goldnam-phase0_pgdata  Created
+ Container goldnam-phase0-web-1  Creating
+ Container goldnam-phase0-db-1  Creating
+ Container goldnam-phase0-web-1  Created
+ Container goldnam-phase0-db-1  Created
+ Container goldnam-phase0-api-1  Creating
+ Container goldnam-phase0-api-1  Created
+ Container goldnam-phase0-web-1  Starting
+ Container goldnam-phase0-db-1  Starting
+ Container goldnam-phase0-web-1  Started
+ Container goldnam-phase0-db-1  Started
+ Container goldnam-phase0-db-1  Waiting
+ Container goldnam-phase0-db-1  Healthy
+ Container goldnam-phase0-api-1  Starting
+ Container goldnam-phase0-api-1  Started

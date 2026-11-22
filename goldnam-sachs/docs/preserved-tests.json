@@ -1,0 +1,24 @@
+{
+  "test_calculations_v602.py": {
+    "AccountingTests": "4e0a0cfa0d3ff238e82384a27a97601e831b4b4afa8e641c6ac33a7a322a478e",
+    "SizingTests": "f089bf6bd8ceca7a54cd1ba3c06289e5a50c8d0a5e116d0824d2504ec729e5ac",
+    "StatisticsTests": "87c5751dcd3f3b90829e23c2d6f01b5f53c0afca706157a2d9979083a8f302a3",
+    "statement:4": "96f40a53d661bc39607c88fa6a1cb7639aa0f6cab377d9dc813dee0cd8c7af1d"
+  },
+  "test_trade_engine.py": {
+    "TradeTests": "f21a727dc1ee290459037aeeefcb2e064c09a756bfa894f7c2fc7f1db6fba716",
+    "statement:1": "96f40a53d661bc39607c88fa6a1cb7639aa0f6cab377d9dc813dee0cd8c7af1d"
+  },
+  "test_execution_engine.py": {
+    "ExecutionTests": "0b3f3f758413a9d202ce507afccdfdaab9af6808b8278b83a12f651913398178",
+    "CacheTests": "f4024b7c33fe1167bea0fa0bffcb7f0f477d7ba1f8439b4577729f757caee30b",
+    "KoreanSearchTests": "ba25392d8bc64ec2be23fd86b59fe3cd83827c9b98cc6d4ccccf3df692f45ccf",
+    "statement:3": "96f40a53d661bc39607c88fa6a1cb7639aa0f6cab377d9dc813dee0cd8c7af1d"
+  },
+  "smoke_test.py": {
+    "make_momentum": "ec294e5b469e9760133a749117eff96531ebbb3955c3e7208a872d155ea057be",
+    "make_pullback": "10d66cbe6381509288f6f7d77790e05d147d9b0a306e7f313da6c58d39754f6e",
+    "main": "9553b3e172eed29acf599bc4d5517af3ab151d65c4e881ab9c394dbe711518ec",
+    "statement:4": "a390addd663d3fe044b9cedfa65b901e2d2fc568dbae4774bb051e887847cbb1"
+  }
+}

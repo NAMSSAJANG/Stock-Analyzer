@@ -1,0 +1,52 @@
+name: Goldnam Phase 0 checks
+on:
+  pull_request:
+    paths:
+      - 'goldnam-sachs/**'
+      - '.github/workflows/goldnam-ci.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: goldnam-sachs
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: '0.13.9'
+          python-version: '3.12'
+      - run: uv sync --frozen --all-groups --extra api
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
+      - run: uv run mypy
+      - run: uv run pytest --cov=goldnam_engine --cov-report=term-missing
+      - name: Preserved offline smoke and UI regressions
+        run: |
+          uv run python scripts/run_legacy_checks.py smoke_test.py
+          uv run python scripts/run_legacy_checks.py test_trade_ui.py
+          uv run python scripts/run_legacy_checks.py test_execution_ui.py
+          uv run python scripts/run_legacy_checks.py test_analysis_ui.py
+      - run: docker compose -p goldnam-phase0 config --quiet
+      - run: uv run python scripts/validate_blueprint.py
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: goldnam-sachs/web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm install --global pnpm@12.21.0
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+        env:
+          NEXT_TELEMETRY_DISABLED: '1'

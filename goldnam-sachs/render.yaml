@@ -1,0 +1,33 @@
+# Phase 0 draft only. No Blueprint sync or deployment has been performed.
+# New names; do not attach these definitions to the existing Stock Analyzer service.
+services:
+  - type: web
+    name: goldnam-sachs-api
+    runtime: docker
+    rootDir: goldnam-sachs
+    dockerfilePath: ./Dockerfile
+    plan: free
+    autoDeployTrigger: 'off'
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: goldnam-sachs-db
+          property: connectionString
+      - key: WRITE_API_TOKEN
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+  - type: web
+    name: goldnam-sachs-web
+    runtime: static
+    rootDir: goldnam-sachs
+    autoDeployTrigger: 'off'
+    buildCommand: npm install --global pnpm@12.21.0 && cd web && pnpm install --frozen-lockfile && pnpm build
+    staticPublishPath: web/out
+databases:
+  - name: goldnam-sachs-db
+    plan: free
+    ipAllowList: []
+# Free Postgres expires after 30 days and is limited to 1 GB (checked 2026-11-23).
+# Phase 8 must select a durable database plan and finish API/CORS/secrets configuration.

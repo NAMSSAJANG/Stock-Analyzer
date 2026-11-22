@@ -1,0 +1,8 @@
+.................................................            [100%]
+=============================== warnings summary ===============================
+test_execution_engine.py::KoreanSearchTests::test_default_fallback_when_all_endpoints_fail
+  /workspace/.venv-goldnam/lib/python3.12/site-packages/pytest_socket/__init__.py:138: UserWarning: A test tried to use socket.socket.
+    raise SocketBlockedError()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+49 passed, 1 warning, 12 subtests passed in 6.80s
