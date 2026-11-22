@@ -49,6 +49,7 @@ pattern = 'APP_VERSION = "(?P<version>[^\"]+)"'
 packages = ["engine/goldnam_engine"]
 
 [tool.pytest.ini_options]
+pythonpath = ["."]
 testpaths = ["engine/tests", "api/tests"]
 addopts = "-ra --disable-socket --allow-unix-socket -m 'not live'"
 norecursedirs = ["legacy_ui", ".*", "node_modules", "__pycache__"]
