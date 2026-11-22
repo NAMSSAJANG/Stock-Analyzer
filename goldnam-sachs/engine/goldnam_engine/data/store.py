@@ -43,7 +43,7 @@ class Store:
             address = "postgresql+psycopg://" + address.removeprefix("postgresql://")
         if os.getenv("RENDER") and not address.startswith("postgresql+"):
             raise ValueError("배포 환경은 Postgres가 필요합니다")
-        options: dict[str, Any] = {"pool_pre_ping": True}
+        options: dict[str, Any] = {"pool_pre_ping": True, "hide_parameters": True}
         if address == "sqlite://":
             options.update(poolclass=StaticPool, connect_args={"check_same_thread": False})
         self.engine = create_engine(address, **options)
