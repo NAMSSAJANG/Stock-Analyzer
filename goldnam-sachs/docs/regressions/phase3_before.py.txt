@@ -1,0 +1,15 @@
+from dataclasses import replace
+from engine.tests.smoke_test import make_momentum
+from goldnam_engine.factors.technical_engine import build_technical_snapshot
+from goldnam_engine.models import MarketRegimeSnapshot
+from goldnam_engine.risk.risk_engine import build_risk_snapshot
+from goldnam_engine.timing.setup_engine import build_setups
+from goldnam_engine.timing.sr_engine import ZoneSet
+m=MarketRegimeSnapshot('KR',70,'favorable',{}, {},1,'')
+d=make_momentum()[0]; t=build_technical_snapshot(d)
+t=replace(t, dollar_volume=9_000_000_000,dist_ema20_atr=4,rsi=90,trend=95,momentum=95,demand=95,relative_strength=95,volume_ratio=2,prior_high20=120,prior_high60=110)
+r=build_risk_snapshot(t,m)
+s=build_setups(130,t,m,ZoneSet((),()),r)
+checks={'unknown_earnings_badge':r.earnings=='발표일 미확인','extended_not_preferred':'Momentum' not in s.preferred,'explicit_60day_trigger':s.momentum.trigger==110,'live_fx_2000_liquidity':r.liquidity=='Weak'}
+for k,v in checks.items(): print(k,'PASS' if v else 'FAIL')
+assert all(checks.values()),checks

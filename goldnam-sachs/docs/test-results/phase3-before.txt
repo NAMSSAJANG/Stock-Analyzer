@@ -1,0 +1,9 @@
+unknown_earnings_badge FAIL
+extended_not_preferred FAIL
+explicit_60day_trigger FAIL
+live_fx_2000_liquidity FAIL
+Traceback (most recent call last):
+  File "/tmp/phase3_before.py", line 15, in <module>
+    assert all(checks.values()),checks
+           ^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'unknown_earnings_badge': False, 'extended_not_preferred': False, 'explicit_60day_trigger': False, 'live_fx_2000_liquidity': False}
