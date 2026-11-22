@@ -1,0 +1,31 @@
+[
+  {
+    "page": "login",
+    "scores": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1
+    },
+    "failed": [
+      "unused-css-rules",
+      "network-dependency-tree-insight",
+      "render-blocking-insight"
+    ]
+  },
+  {
+    "page": "stock",
+    "scores": {
+      "performance": 0.74,
+      "accessibility": 1,
+      "best-practices": 0.96
+    },
+    "failed": [
+      "errors-in-console",
+      "mainthread-work-breakdown",
+      "layout-shifts",
+      "cls-culprits-insight",
+      "network-dependency-tree-insight",
+      "render-blocking-insight"
+    ]
+  }
+]

@@ -106,6 +106,7 @@ def test_search_analysis_prices_market_and_validation(bundle):
     assert client.get("/api/v1/stocks/AAPL/prices?range=1y").json()["data"]["bars"]
     assert client.get("/api/v1/stocks/AAPL/prices?range=bad").status_code == 422
     assert client.get("/api/v1/market/us/regime").json()["data"]["regime"]
+    assert len(client.get("/api/v1/market/us/overview").json()["data"]["macro"]) == 2
     assert client.get("/api/v1/market/other/regime").status_code == 422
     assert client.get("/api/v1/validation/us/latest").json()["data"] is None
     store.put("validation", "us", {"composite_evidence": "미검증"})
@@ -236,3 +237,32 @@ def test_expired_session_and_changed_passcode_invalidate(bundle):
     login(client)
     app.state.auth.passcode_hash = PasswordHasher().hash("different-test-fixture")
     assert client.get("/api/v1/auth/session").status_code == 401
+
+
+def test_legacy_history_import_is_versioned_and_never_merges_scores(bundle):
+    client, store, _, _ = bundle
+    login(client)
+    rows = [{"symbol": "AAPL", "date": "2020-01-01", "opportunity": 75, "metadata": "{}"}]
+    assert client.post("/api/v1/history/import", json=rows).json()["data"]["imported"] == 1
+    assert client.post("/api/v1/history/import", json=rows).status_code == 200
+    result = client.get("/api/v1/history").json()["data"]
+    assert len(result) == 1 and result[0]["score_version"] == "v6"
+    assert store.list("scores") == []
+    assert client.post("/api/v1/history/import", json=[{"symbol": "AAPL"}]).status_code == 422
+
+
+def test_saved_costs_apply_and_bad_holdings_are_validation_errors(bundle):
+    client, _, _, _ = bundle
+    login(client)
+    defaults = client.get("/api/v1/settings").json()["data"]
+    defaults["costs"] = dict(buy_fee=0.01, sell_fee=0.01, sell_tax=0.01, slippage=0.01)
+    client.post("/api/v1/settings", json=defaults)
+    implicit = client.post("/api/v1/trade-lab/plan", json={}).json()["data"]
+    explicit = client.post("/api/v1/trade-lab/plan", json={"costs": defaults["costs"]}).json()[
+        "data"
+    ]
+    assert implicit == explicit
+    assert (
+        client.post("/api/v1/trade-lab/plan", json={"holdings": [{"bad": "value"}]}).status_code
+        == 422
+    )

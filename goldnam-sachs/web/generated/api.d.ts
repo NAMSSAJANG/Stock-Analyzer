@@ -157,6 +157,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/market/{market}/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Market Overview */
+        get: operations["market_overview_api_v1_market__market__overview_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/validation/{market}/latest": {
         parameters: {
             query?: never;
@@ -204,6 +221,40 @@ export interface paths {
         post?: never;
         /** Delete Watch */
         delete: operations["delete_watch_api_v1_watchlist__symbol__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** History */
+        get: operations["history_api_v1_history_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/history/import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Import History */
+        post: operations["import_history_api_v1_history_import_post"];
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -370,6 +421,20 @@ export interface components {
     schemas: {
         /** Analysis */
         Analysis: {
+            timing?: components["schemas"]["SetupSnapshot"] | null;
+            risk?: components["schemas"]["RiskState"] | null;
+            /**
+             * Actionable
+             * @default false
+             */
+            actionable: boolean;
+            /** Change Pct */
+            change_pct?: number | null;
+            /**
+             * Timing Note
+             * @default
+             */
+            timing_note: string;
             /** Symbol */
             symbol: string;
             /** Name */
@@ -394,10 +459,6 @@ export interface components {
             grade: string;
             /** Last Price */
             last_price?: number | null;
-            /** Change Pct */
-            change_pct?: number | null;
-            timing?: components["schemas"]["SetupSnapshot"] | null;
-            risk?: components["schemas"]["RiskState"] | null;
             zones?: components["schemas"]["ZoneSet"] | null;
             technical?: components["schemas"]["TechnicalSnapshot"] | null;
             regime?: components["schemas"]["MarketRegimeSnapshot"] | null;
@@ -584,6 +645,16 @@ export interface components {
             /** Warnings */
             warnings?: string[];
         };
+        /** Envelope[list[dict[str, Any]]] */
+        Envelope_list_dict_str__Any___: {
+            /** Data */
+            data: {
+                [key: string]: unknown;
+            }[];
+            meta?: components["schemas"]["Meta"];
+            /** Warnings */
+            warnings?: string[];
+        };
         /** ExecutionInput */
         ExecutionInput: {
             /** Symbol */
@@ -612,6 +683,19 @@ export interface components {
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /** HoldingInput */
+        HoldingInput: {
+            /** Symbol */
+            symbol: string;
+            /** Sector */
+            sector: string;
+            /** Quantity */
+            quantity: number;
+            /** Price */
+            price: number;
+            /** Stop */
+            stop: number;
         };
         /** JournalInput */
         JournalInput: {
@@ -796,9 +880,7 @@ export interface components {
              */
             sector: string;
             /** Holdings */
-            holdings?: {
-                [key: string]: unknown;
-            }[];
+            holdings?: components["schemas"]["HoldingInput"][];
         };
         /** PriceBar */
         PriceBar: {
@@ -893,6 +975,20 @@ export interface components {
         };
         /** ScoreRow */
         ScoreRow: {
+            timing?: components["schemas"]["SetupSnapshot"] | null;
+            risk?: components["schemas"]["RiskState"] | null;
+            /**
+             * Actionable
+             * @default false
+             */
+            actionable: boolean;
+            /** Change Pct */
+            change_pct?: number | null;
+            /**
+             * Timing Note
+             * @default
+             */
+            timing_note: string;
             /** Symbol */
             symbol: string;
             /** Name */
@@ -1386,6 +1482,9 @@ export interface operations {
                 as_of?: string | null;
                 sort?: string;
                 minimum?: number;
+                timing?: string;
+                risk?: string;
+                actionable?: boolean;
                 page?: number;
                 page_size?: number;
             };
@@ -1418,6 +1517,37 @@ export interface operations {
         };
     };
     market_regime_api_v1_market__market__regime_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                market: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_dict_str__Any__"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    market_overview_api_v1_market__market__overview_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -1550,6 +1680,61 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Envelope_dict_str__bool__"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    history_api_v1_history_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_list_dict_str__Any___"];
+                };
+            };
+        };
+    };
+    import_history_api_v1_history_import_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    [key: string]: unknown;
+                }[];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_dict_str__int__"];
                 };
             };
             /** @description Validation Error */

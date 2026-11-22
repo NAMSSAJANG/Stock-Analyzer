@@ -1,0 +1,14 @@
+{
+  "personal": {
+    "color": "#6698C9",
+    "ink": "#12150E",
+    "logo": "/brand/personal.svg",
+    "name": "Personal"
+  },
+  "goldnam": {
+    "color": "#C4F750",
+    "ink": "#12150E",
+    "logo": "/brand/goldnam.svg",
+    "name": "Goldnam"
+  }
+}

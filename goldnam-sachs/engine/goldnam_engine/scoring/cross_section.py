@@ -130,3 +130,21 @@ def grade(value: int | None) -> str:
         if value <= 30
         else "중간"
     )
+
+
+def rank_price_history(features: dict[str, pd.DataFrame]) -> dict[str, pd.DataFrame]:
+    """Vectorized daily price-factor ranks with the same missingness gate as snapshots."""
+    ranked = {
+        name: values.clip(values.quantile(0.01, axis=1), values.quantile(0.99, axis=1), axis=0)
+        .rank(axis=1, pct=True)
+        .mul(100)
+        .where(values.notna().sum(axis=1).ge(2), axis=0)
+        for name, values in features.items()
+    }
+    result = {}
+    for factor in ("momentum", "trend"):
+        columns = FACTOR_COLUMNS[factor]
+        stack = pd.concat({name: ranked[name] for name in columns}, axis=0)
+        grouped = stack.groupby(level=1)
+        result[factor] = grouped.mean().where(grouped.count() >= ceil(len(columns) / 2))
+    return result

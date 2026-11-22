@@ -12,12 +12,13 @@ from typing import Any
 import pandas as pd
 from goldnam_engine._version import APP_VERSION, SCORE_VERSION
 from goldnam_engine.data.fundamentals import DartFundamentals, SecFundamentals
-from goldnam_engine.data.market_data import Prices
+from goldnam_engine.data.market_data import Fx, Prices
 from goldnam_engine.data.quality import calendar
 from goldnam_engine.data.store import Store
 from goldnam_engine.data.universe import Universes, serialize
 from goldnam_engine.factors.cross_section import financial_features, price_features
 from goldnam_engine.scoring.cross_section import rank_snapshot
+from goldnam_engine.scoring.snapshot import timing_snapshot
 
 
 def calculate(market: str, as_of: date, cache_dir: Path) -> dict[str, Any]:
@@ -51,6 +52,7 @@ def calculate(market: str, as_of: date, cache_dir: Path) -> dict[str, Any]:
         shares = fact.get("shares") if fact else None
         last = close[symbol].iloc[-1] if symbol in close and not close.empty else None
         cap = float(shares * last) if shares is not None and last is not None else None
+        snapshot.loc[symbol, "market_cap"] = cap
         for column, value in financial_features(fact, cap).items():
             snapshot.loc[symbol, column] = value
         source_rows.append(
@@ -72,9 +74,15 @@ def calculate(market: str, as_of: date, cache_dir: Path) -> dict[str, Any]:
                 },
             }
         )
+    benchmark = prices.prices(
+        "SPY" if market == "us" else "^KS11", as_of - timedelta(days=550), as_of
+    )
+    fx = Fx().usd_krw() if market == "kr" else None
     ranking_start = perf_counter()
     scores = rank_snapshot(snapshot, as_of, [])
-    for row, sources in zip(scores, source_rows, strict=True):
+    for row, sources, price in zip(scores, source_rows, price_results, strict=True):
+        row.update(timing_snapshot(price.data, benchmark.data, market, fx))
+        row["market_cap"] = snapshot.loc[row["symbol"], "market_cap"]
         row["score"]["sources"] = [sources["price"], sources["fundamentals"]]
         for factor in row["factors"].values():
             factor["sources"] = row["score"]["sources"]

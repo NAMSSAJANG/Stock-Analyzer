@@ -6,6 +6,8 @@ if (!version) throw new Error("Engine app version is missing");
 
 const config = {
   output: "export",
+  trailingSlash: true,
+  images: { unoptimized: true },
   env: { NEXT_PUBLIC_APP_VERSION: version },
 };
 export default config;

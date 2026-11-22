@@ -129,6 +129,45 @@ class AnalysisService:
             "as_of": str(result.as_of),
         }
 
+    def overview(self, market: str) -> dict[str, Any]:
+        from math import sqrt
+
+        macro = []
+        for symbol, label, unit in (
+            ("^TNX", "미국 10년 국채 수익률", "%"),
+            ("^VIX", "미국 VIX", "pt"),
+        ):
+            result = self.prices.prices(symbol, date.today() - timedelta(days=35), date.today())
+            macro.append(
+                {
+                    "symbol": symbol,
+                    "label": label,
+                    "unit": unit,
+                    "value": float(result.data.Close.iloc[-1]) if result.data is not None else None,
+                    "source": source_of(result).model_dump(),
+                }
+            )
+        batch = self.store.get("batch", market)
+        rows = self.store.list("scores", f"{market}:{batch['as_of']}:") if batch else []
+        tiles = [
+            {
+                "symbol": r["symbol"],
+                "name": r.get("name"),
+                "sector": r.get("sector"),
+                "weight": sqrt(r["market_cap"]),
+                "market_cap": r["market_cap"],
+                "change_pct": r.get("change_pct"),
+            }
+            for r in rows
+            if (r.get("market_cap") or 0) > 0
+        ]
+        return {
+            "macro": macro,
+            "heatmap": tiles,
+            "as_of": batch.get("as_of") if batch else None,
+            "note": "히트맵 면적은 시가총액 제곱근. 재무/시가총액 결측 종목 제외. 미국 금리·변동성은 양 시장의 공통 참고 지표.",
+        }
+
     def analysis(self, symbol: str, include_options: bool = False) -> Envelope[Analysis]:
         market = market_for(symbol)
         result = self.prices.prices(symbol, date.today() - timedelta(days=550), date.today())
@@ -212,6 +251,9 @@ class AnalysisService:
         zones = structural_zones(build_zones(d, technical)) if technical else None
         earnings = self.calendar.earnings(symbol)
         fx = self.fx.usd_krw() if market == "kr" else None
+        sources.append(source_of(earnings))
+        if fx:
+            sources.append(source_of(fx))
         risk = (
             build_risk_snapshot(
                 technical, regime, (earnings.data - as_of).days if earnings.data else None, fx

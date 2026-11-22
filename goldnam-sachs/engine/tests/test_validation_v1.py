@@ -118,3 +118,25 @@ def test_event_controls_reproducible_and_portfolio_limits():
     assert portfolio["entries"] > 0 and max(r["positions"] for r in portfolio["curve"]) == 1
     assert portfolio["max_drawdown"] <= 0
     assert portfolio_simulation(pd.DataFrame(), {}, {}, Costs())["entries"] == 0
+
+
+def test_vectorized_price_ranking_matches_daily_missingness():
+    from datetime import date
+
+    from goldnam_engine.factors.cross_section import FACTOR_COLUMNS
+    from goldnam_engine.scoring.cross_section import rank_price_history, rank_snapshot
+
+    columns = FACTOR_COLUMNS["momentum"] + FACTOR_COLUMNS["trend"]
+    raw = pd.DataFrame({name: [1.0, 2.0, 3.0] for name in columns}, index=["A", "B", "C"])
+    raw.loc["A", FACTOR_COLUMNS["momentum"][0]] = float("nan")
+    raw.loc["B", FACTOR_COLUMNS["trend"][:3]] = float("nan")
+    features = {
+        name: pd.DataFrame([raw[name].to_dict()], index=pd.to_datetime(["2026-01-01"]))
+        for name in columns
+    }
+    history = rank_price_history(features)
+    for row in rank_snapshot(raw, date(2026, 1, 1), []):
+        for factor in ("momentum", "trend"):
+            actual = history[factor].iloc[0][row["symbol"]]
+            expected = row["factors"][factor]["raw_value"]
+            assert pd.isna(actual) if expected is None else actual == pytest.approx(expected)

@@ -1,0 +1,17 @@
+
+Running 3 tests using 1 worker
+
+(node:24607) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Skipping host requirements validation logic because `PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS` env variable is set.
+  ✓  1 [iphone] › e2e/mobile.spec.ts:7:1 › 로그인 → 검색 → 종목 → 스크리너, 테마와 오프라인 보호 (9.9s)
+(node:24830) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Skipping host requirements validation logic because `PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS` env variable is set.
+  ✓  2 [android] › e2e/mobile.spec.ts:7:1 › 로그인 → 검색 → 종목 → 스크리너, 테마와 오프라인 보호 (4.5s)
+(node:24999) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Skipping host requirements validation logic because `PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS` env variable is set.
+  ✓  3 [desktop] › e2e/mobile.spec.ts:7:1 › 로그인 → 검색 → 종목 → 스크리너, 테마와 오프라인 보호 (4.4s)
+
+  3 passed (22.5s)

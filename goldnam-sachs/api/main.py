@@ -104,6 +104,9 @@ def create_app(
             "/login/",
             "/offline.html",
             "/manifest.webmanifest",
+            "/manifest-personal.webmanifest",
+            "/manifest-goldnam.webmanifest",
+            "/offline.js",
             "/service-worker.js",
             "/robots.txt",
         } or (
@@ -232,6 +235,9 @@ def create_app(
         as_of: date | None = None,
         sort: str = "score",
         minimum: int = Query(default=0, ge=0, le=100),
+        timing: str = "all",
+        risk: str = "all",
+        actionable: bool = False,
         page: int = Query(default=1, ge=1),
         page_size: int = Query(default=30, ge=1, le=100),
     ) -> Envelope[Screener]:
@@ -240,10 +246,50 @@ def create_app(
         batch = db().get("batch", market)
         day = str(as_of) if as_of else str(batch["as_of"]) if batch else ""
         records = db().list("scores", f"{market}:{day}:") if day else []
-        if sort not in {"score", "momentum", "trend", "quality", "value", "growth", "symbol"}:
+        if sort not in {
+            "score",
+            "momentum",
+            "trend",
+            "quality",
+            "value",
+            "growth",
+            "symbol",
+            "timing",
+            "risk",
+        }:
             raise HTTPException(422, "정렬 기준 오류")
 
+        if timing not in {
+            "all",
+            "READY",
+            "CONFIRMED",
+            "WATCH",
+            "DEVELOPING",
+            "EXTENDED",
+        } or risk not in {"all", "LOW", "MODERATE", "HIGH", "EXTREME"}:
+            raise HTTPException(422, "필터 오류")
+        records = [
+            r
+            for r in records
+            if (not actionable or r.get("actionable"))
+            and (risk == "all" or (r.get("risk") or {}).get("level") == risk)
+            and (
+                timing == "all"
+                or any(
+                    ((r.get("timing") or {}).get(k) or {}).get("status") == timing
+                    for k in ("pullback", "momentum")
+                )
+            )
+        ]
+
         def value(row: dict[str, Any]) -> float:
+            if sort == "risk":
+                return -float((row.get("risk") or {}).get("score", 101) or 101)
+            if sort == "timing":
+                return max(
+                    float(((row.get("timing") or {}).get(k) or {}).get("score", -1))
+                    for k in ("pullback", "momentum")
+                )
             v = (
                 row["score"].get("value")
                 if sort == "score"
@@ -281,6 +327,12 @@ def create_app(
             raise HTTPException(422, "시장 오류")
         return Envelope(data=data_service().regime(market))
 
+    @application.get("/api/v1/market/{market}/overview", response_model=Envelope[dict[str, Any]])
+    def market_overview(market: str) -> Envelope[dict[str, Any]]:
+        if market not in {"us", "kr"}:
+            raise HTTPException(422, "시장 오류")
+        return Envelope(data=data_service().overview(market))
+
     @application.get(
         "/api/v1/validation/{market}/latest", response_model=Envelope[dict[str, Any] | None]
     )
@@ -304,6 +356,19 @@ def create_app(
     def delete_watch(symbol: str) -> Envelope[dict[str, bool]]:
         db().remove("watchlist", symbol_checked(symbol))
         return Envelope(data={"deleted": True})
+
+    @application.get("/api/v1/history", response_model=Envelope[list[dict[str, Any]]])
+    def history() -> Envelope[list[dict[str, Any]]]:
+        return Envelope(
+            data=db().list("legacy_history"),
+            warnings=["v6 점수는 새 점수와 비교·합산하지 않습니다"],
+        )
+
+    @application.post("/api/v1/history/import", response_model=Envelope[dict[str, int]])
+    def import_history(body: list[dict[str, Any]]) -> Envelope[dict[str, int]]:
+        from jobs.import_v6_history import normalize, save
+
+        return Envelope(data={"imported": save(normalize(body), db())})
 
     @application.get("/api/v1/journal", response_model=Envelope[list[JournalRecord]])
     def journal() -> Envelope[list[JournalRecord]]:
@@ -367,7 +432,11 @@ def create_app(
         "/api/v1/trade-lab/plan", response_model=Envelope[dict[str, Any] | list[dict[str, Any]]]
     )
     def plan(body: PlanInput) -> Envelope[Any]:
-        cost = Costs(**body.costs.model_dump())
+        cost = Costs(
+            **(
+                body.costs if "costs" in body.model_fields_set else settings().data.costs
+            ).model_dump()
+        )
         if body.kind == "ladder":
             result: Any = plan_ladder(body.cash, body.prices, body.weights, cost, body.reserve_pct)
         elif body.kind == "target_average":
@@ -383,11 +452,12 @@ def create_app(
                 body.stop,
                 body.target,
                 body.sector,
-                [Holding(**h) for h in body.holdings],
+                [Holding(**h.model_dump()) for h in body.holdings],
                 body.risk_pct,
                 body.max_position_pct,
                 body.multiplier,
                 cost,
+                gap_pct=body.gap_pct,
             )
         return Envelope(data=serialize(result))
 
@@ -407,7 +477,11 @@ def create_app(
             body.cash,
             body.path,
             body.rules,
-            Costs(**body.costs.model_dump()),
+            Costs(
+                **(
+                    body.costs if "costs" in body.model_fields_set else settings().data.costs
+                ).model_dump()
+            ),
         )
         return Envelope(data={"rows": serialize(rows), "journal": serialize(log)})
 
@@ -425,7 +499,15 @@ def create_app(
             raise SourceFailure("prices", "체결 검증 시세 없음")
         history = setup_history(frame.data, bench.data, market_for(symbol))
         actual, random = study_symbol(
-            frame.data, history, body.setup, body.mode, Costs(**body.costs.model_dump())
+            frame.data,
+            history,
+            body.setup,
+            body.mode,
+            Costs(
+                **(
+                    body.costs if "costs" in body.model_fields_set else settings().data.costs
+                ).model_dump()
+            ),
         )
         return Envelope(
             data=cast(
@@ -436,7 +518,7 @@ def create_app(
             )
         )
 
-    @application.get("/{path:path}", include_in_schema=False)
+    @application.api_route("/{path:path}", methods=["GET", "HEAD"], include_in_schema=False)
     def static_file(path: str) -> Response:
         if path == "robots.txt":
             return Response("User-agent: *\nDisallow: /\n", media_type="text/plain")

@@ -84,28 +84,10 @@ def run(
     close = pd.DataFrame({s: f.Close for s, f in frames.items()}).sort_index()
     opens = pd.DataFrame({s: f.Open for s, f in frames.items()}).reindex(close.index)
     feature = price_features(close)
-    # Per-date winsorization and percentile ranks are vectorized over the universe.
-    percentiles = {
-        name: values.clip(
-            values.quantile(0.01, axis=1), values.quantile(0.99, axis=1), axis=0
-        ).rank(axis=1, pct=True)
-        * 100
-        for name, values in feature.items()
-    }
-    momentum = (percentiles["momentum_12_1"] + percentiles["momentum_6_1"]) / 2
-    trend = (
-        pd.concat(
-            {
-                name: p
-                for name, p in percentiles.items()
-                if name not in {"momentum_12_1", "momentum_6_1"}
-            },
-            axis=0,
-        )
-        .groupby(level=1)
-        .mean()
-        .reindex(close.index)
-    )
+    from goldnam_engine.scoring.cross_section import rank_price_history
+
+    price_ranks = rank_price_history(feature)
+    momentum, trend = price_ranks["momentum"], price_ranks["trend"]
     regimes = regime_series(bench).label.reindex(close.index)
     cost = default_costs(market)
     round_trip = float(cost.buy_unit(1) - cost.sell_unit(1))

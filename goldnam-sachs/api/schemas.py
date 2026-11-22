@@ -45,6 +45,11 @@ class ScoreModel(BaseModel):
 
 
 class ScoreRow(BaseModel):
+    timing: SetupSnapshot | None = None
+    risk: RiskState | None = None
+    actionable: bool = False
+    change_pct: float | None = None
+    timing_note: str = ""
     symbol: str
     name: str | None = None
     market: str | None = None
@@ -142,6 +147,13 @@ class Settings(StrictModel):
     saved_filters: list[dict[str, str]] = Field(default_factory=list, max_length=20)
 
 
+class HoldingInput(WatchItem):
+    sector: str = Field(max_length=200)
+    quantity: int = Field(ge=0)
+    price: float = Field(gt=0)
+    stop: float = Field(gt=0)
+
+
 class PlanInput(StrictModel):
     kind: Literal["position", "ladder", "target_average"] = "position"
     account: float = Field(default=100000, gt=0)
@@ -160,7 +172,7 @@ class PlanInput(StrictModel):
     average: float = Field(default=100, ge=0)
     costs: CostInput = Field(default_factory=CostInput)
     sector: str = "미확인"
-    holdings: list[dict[str, Any]] = Field(default_factory=list, max_length=100)
+    holdings: list[HoldingInput] = Field(default_factory=list, max_length=100)
 
 
 class SimulationInput(StrictModel):
