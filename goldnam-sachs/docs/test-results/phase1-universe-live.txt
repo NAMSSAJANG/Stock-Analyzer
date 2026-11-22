@@ -1,0 +1,4 @@
+/workspace/.venv-goldnam/lib/python3.12/site-packages/pykrx/__init__.py:4: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+us ok 518 현재 지수 구성으로 과거 검증 · 상장폐지/편출 종목 누락에 따른 생존 편향
+kr failed 0 구성 조회 실패: KeyError

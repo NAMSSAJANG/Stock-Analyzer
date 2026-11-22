@@ -1,0 +1,33 @@
+......ssssss                                                             [100%]
+=============================== warnings summary ===============================
+engine/tests/test_data_live.py::test_live_prices[AAPL]
+engine/tests/test_data_live.py::test_live_prices[AAPL]
+engine/tests/test_data_live.py::test_live_prices[AAPL]
+engine/tests/test_data_live.py::test_live_prices[AAPL]
+engine/tests/test_data_live.py::test_live_prices[005930.KS]
+engine/tests/test_data_live.py::test_live_prices[005930.KS]
+engine/tests/test_data_live.py::test_live_prices[005930.KS]
+engine/tests/test_data_live.py::test_live_prices[005930.KS]
+  /workspace/.venv-goldnam/lib/python3.12/site-packages/pandas/core/series.py:848: Pandas4Warning: Series.values returning an ndarray that drops timezone information for DatetimeTZDtype is deprecated. In a future version, this will return the underlying DatetimeArray instead. Use 'Series.dt.tz_convert(None).to_numpy()' to get a NumPy array of UTC values, or 'Series.array' to get the ExtensionArray.
+  See https://pandas.pydata.org/docs/dev/whatsnew/v3.1.0.html#whatsnew-310-deprecations-values for more details.
+    warnings.warn(
+
+engine/tests/test_data_live.py::test_live_prices[005930.KS]
+engine/tests/test_data_live.py::test_live_prices[000660.KS]
+engine/tests/test_data_live.py::test_live_prices[035420.KS]
+  /workspace/.venv-goldnam/lib/python3.12/site-packages/FinanceDataReader/naver/data.py:19: Pandas4Warning: The inplace keyword in DataFrame.set_index is deprecated and will be removed in a future version (PDEP-8).
+  See https://pandas.pydata.org/docs/dev/whatsnew/v3.1.0.html#deprecation-inplace for more details.
+    df.set_index('Date', inplace=True)
+
+engine/tests/test_data_live.py::test_live_prices[005930.KS]
+engine/tests/test_data_live.py::test_live_prices[000660.KS]
+engine/tests/test_data_live.py::test_live_prices[035420.KS]
+  /workspace/.venv-goldnam/lib/python3.12/site-packages/FinanceDataReader/naver/data.py:20: Pandas4Warning: The inplace keyword in DataFrame.sort_index is deprecated and will be removed in a future version (PDEP-8).
+  See https://pandas.pydata.org/docs/dev/whatsnew/v3.1.0.html#deprecation-inplace for more details.
+    df.sort_index(inplace=True)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+SKIPPED [3] engine/tests/test_data_live.py:25: SEC_USER_AGENT 미설정 · 사용자 나중에 설정 예정
+SKIPPED [3] engine/tests/test_data_live.py:25: OPENDART_API_KEY 미설정 · 사용자 나중에 설정 예정
+6 passed, 6 skipped, 14 warnings in 10.57s
