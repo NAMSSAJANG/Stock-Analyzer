@@ -41,4 +41,8 @@
 
 ## 원격 CI 추적
 
-Phase 2까지 원격 CI 성공을 확인했다. 최종 브랜치 push 후 원격 검사를 추적 중이며 최종 결과는 이 절에 추가한다.
+최종 구현 커밋 `581c759c406bfaa74eeb3735065cc5081138aef9`의 [GitHub Actions 실행 45063581085](https://github.com/NAMSSAJANG/Stock-Analyzer/actions/runs/45063581085)은 **전체 success**다. Python·web·browser 세 job 모두 성공했다. 원격 Python에는 전체 단위/커버리지·원본 회귀·Compose·Blueprint 검사가, browser에는 실제 HTTPS 로그인과 iPhone WebKit/Android Chromium/desktop 흐름 및 산출물 업로드가 포함된다.
+
+이전 원격 실행에서 거래대금 평균의 부동소수점 합산 차이(약 3e-8)를 발견했다. 새 시계열 계산이 기존 엔진과 동일하게 20일 창을 합산하도록 수정했고, 원본 로직이나 테스트 허용 오차는 변경하지 않았다. [관련 회귀 10개 통과](test-results/ci-numerical-regression.txt), 최종 전체 로컬 재실행 134 passed/86.48%를 확인했다. GitHub Actions도 공식 최신 안정판으로 갱신해 검증했다.
+
+이 보고서의 최종 기록 커밋은 문서만 변경한다. 위 링크와 SHA는 실제 구현을 검사한 실행을 가리킨다.
