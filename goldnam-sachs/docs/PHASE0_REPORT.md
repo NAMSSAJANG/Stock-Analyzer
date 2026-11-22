@@ -1,3 +1,19 @@
+# Phase 0 재개 결과 — 완료 (2026-11-23)
+
+ADDENDUM A1에 따라 폴더를 `goldnam-sachs/`로 변경하고 `goldnam/v0.0.0-a.1` 브랜치를 push했다.
+PR: https://github.com/NAMSSAJANG/Stock-Analyzer/pull/2
+원격 CI: https://github.com/NAMSSAJANG/Stock-Analyzer/actions/runs/45052720776
+검증 커밋: `5862610abbf4ac4863d71cc1e294d40838353b53`.
+Python·웹 job 모두 success. 원문 메타데이터는 `test-results/phase0-remote-ci.json`.
+
+추가 수정: pytest CLI에서 프로젝트 모듈을 못 찾던 문제를 pythonpath 설정으로 해결했다.
+재검사 원문: `75 passed, 2 warnings in 19.70s`, 커버리지 90.28%.
+현재 Phase 0 완료 기준은 모두 통과했다. main 병합·리소스 생성·배포는 하지 않았다.
+
+---
+
+아래는 이전 세션의 원본 보고서(당시 원격 CI 미실행 상태)이다.
+
 # Phase 0 결과 — 2026-11-23
 
 **구현 및 로컬 검증 완료. 원격 GitHub CI 실행은 미완료. Phase 1은 시작하지 않음.**
