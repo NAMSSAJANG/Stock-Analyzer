@@ -67,7 +67,11 @@ def technical_series(d: pd.DataFrame, benchmark: pd.DataFrame) -> pd.DataFrame:
             "atr": atr,
             "atr_pct": (atr / c * 100).round(2),
             "volume_ratio": vol_ratio.round(2),
-            "dollar_volume": (c * v).rolling(20).mean(),
+            # Legacy Series.mean sums each 20-bar window. Pandas rolling.mean uses
+            # compensated accumulation and can differ by an ULP at large notional values.
+            "dollar_volume": (c * v)
+            .rolling(20)
+            .apply(lambda window: window.sum() / window.size, raw=True),
             "ret_1m": ret[22].round(2),
             "ret_3m": ret[66].round(2),
             "ret_6m": ret[126].round(2),
