@@ -1,0 +1,1 @@
+{"market": "us", "as_of": "2026-11-20", "app_version": "0.0.0-a.1", "score_version": "score-v0.1", "universe_as_of": "2026-11-23", "bias": "현재 지수 구성으로 과거 검증 · 상장폐지/편출 종목 누락에 따른 생존 편향", "count": 518, "prices_usable": 518, "composites_available": 0, "ranking_seconds": 24.619375023999964, "total_seconds": 28.032083198999317}

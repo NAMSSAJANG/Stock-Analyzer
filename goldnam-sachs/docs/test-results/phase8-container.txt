@@ -1,0 +1,10 @@
+PASS non-root production image starts; health 200
+PASS private static pages, Argon2 login, PostgreSQL settings write/read, manifest, logout
+goldnam-app-test 6.575GiB / 16GiB
+uid=10001(goldnam) gid=10001(goldnam) groups=10001(goldnam)
+PASS settings persist after application container restart
+Cgroup driver=none, version=2
+VmSize:	  564088 kB
+VmHWM:	  181572 kB
+VmRSS:	  181572 kB
+Note: docker stats in this nested runtime reports the shared parent cgroup, not a reliable per-app footprint. /proc/1 VmRSS after startup is 181572 kB; this is not a production peak-load guarantee.

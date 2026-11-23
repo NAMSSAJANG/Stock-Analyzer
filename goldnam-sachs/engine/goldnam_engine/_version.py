@@ -1,0 +1,3 @@
+APP_VERSION = "0.0.0-a.1"
+SCORE_VERSION = "score-v0.1"
+LEGACY_SCORE_VERSION = "v6"

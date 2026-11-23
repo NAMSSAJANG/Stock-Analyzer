@@ -1,0 +1,14 @@
+/workspace/.venv-goldnam/lib/python3.12/site-packages/pykrx/__init__.py:4: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+Traceback (most recent call last):
+  File "/workspace/.venv-goldnam/bin/goldnam", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/workspace/Stock-Analyzer/goldnam-sachs/jobs/cli.py", line 14, in main
+    run()
+  File "/workspace/Stock-Analyzer/goldnam-sachs/jobs/validate.py", line 207, in main
+    result = run(
+             ^^^^
+  File "/workspace/Stock-Analyzer/goldnam-sachs/jobs/validate.py", line 82, in run
+    raise RuntimeError("실제 지수 시세 없음")
+RuntimeError: 실제 지수 시세 없음

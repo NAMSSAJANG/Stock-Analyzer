@@ -1,0 +1,194 @@
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.33kB done
+#1 DONE 0.0s
+
+#2 [api internal] load build definition from Dockerfile
+#2 transferring dockerfile: 392B done
+#2 DONE 0.0s
+
+#3 [web internal] load build definition from Dockerfile
+#3 transferring dockerfile: 403B done
+#3 DONE 0.0s
+
+#4 [web internal] load metadata for docker.io/library/node:24-slim
+#4 ...
+
+#5 [api internal] load metadata for ghcr.io/astral-sh/uv:0.13.9
+#5 DONE 1.1s
+
+#6 [web internal] load metadata for docker.io/library/nginx:stable-alpine
+#6 ...
+
+#7 [api internal] load metadata for docker.io/library/python:3.12-slim
+#7 DONE 1.3s
+
+#8 [web internal] load .dockerignore
+#8 transferring context: 124B done
+#8 DONE 0.0s
+
+#4 [web internal] load metadata for docker.io/library/node:24-slim
+#4 DONE 1.3s
+
+#9 [api internal] load build context
+#9 transferring context: 316.47kB done
+#9 DONE 0.0s
+
+#6 [web internal] load metadata for docker.io/library/nginx:stable-alpine
+#6 DONE 1.3s
+
+#10 [web internal] load build context
+#10 transferring context: 158.43kB 0.0s done
+#10 DONE 0.0s
+
+#11 [web stage-1 1/2] FROM docker.io/library/nginx:stable-alpine@sha256:caf4e1e032a20f9c3c5e28fc7f25ffd768ad8677b4975c54193075997b3a97e3
+#11 resolve docker.io/library/nginx:stable-alpine@sha256:caf4e1e032a20f9c3c5e28fc7f25ffd768ad8677b4975c54193075997b3a97e3 0.0s done
+#11 sha256:caf4e1e032a20f9c3c5e28fc7f25ffd768ad8677b4975c54193075997b3a97e3 10.32kB / 10.32kB done
+#11 sha256:4d1d4ce08432dc7dfe4af762cb224ce6b5273ae878f41e020ea2425d02ea91a4 2.49kB / 2.49kB done
+#11 sha256:d5f49e5ab196322ceaca86fd802279f6ace122b19c43fa67d80b029f23936f53 12.30kB / 12.30kB done
+#11 ...
+
+#12 [api uv 1/1] FROM ghcr.io/astral-sh/uv:0.13.9@sha256:d3b601f0c7b118bc1753febf7c41cc80981df678445e0254284eecf84db79a7d
+#12 resolve ghcr.io/astral-sh/uv:0.13.9@sha256:d3b601f0c7b118bc1753febf7c41cc80981df678445e0254284eecf84db79a7d done
+#12 sha256:d3b601f0c7b118bc1753febf7c41cc80981df678445e0254284eecf84db79a7d 2.19kB / 2.19kB done
+#12 sha256:49fe3c925d4b7a84ba2ef19883307bba2bbcf929a22040afb46f2dd092d13aeb 669B / 669B done
+#12 sha256:a85d08de06542c59ea4a303dec5f82ef93a25e2d8edf5852a6cbee63fc5b23b1 1.30kB / 1.30kB done
+#12 sha256:6194b0176b3040f6b7ddcb49a3eb00c776bd1c508e0012f743d1d9dc2611c37a 19.60MB / 19.60MB 0.9s done
+#12 sha256:738af053281ffefe1f1e338797802de818be2055e29d46d982b10d1605f2e7b6 98B / 98B 0.3s done
+#12 extracting sha256:6194b0176b3040f6b7ddcb49a3eb00c776bd1c508e0012f743d1d9dc2611c37a 0.3s done
+#12 extracting sha256:738af053281ffefe1f1e338797802de818be2055e29d46d982b10d1605f2e7b6 done
+#12 DONE 1.4s
+
+#13 [api stage-1 1/7] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#13 resolve docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b 0.0s done
+#13 sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b 10.37kB / 10.37kB done
+#13 sha256:05a994d2344eb364cc186910f4fc8786a38215f39f00d0acc25bff33a08f4177 1.75kB / 1.75kB done
+#13 sha256:78976a69c067520ef8be34cde307ef9f6fea6dcefa50edb57039773d241ca0db 5.66kB / 5.66kB done
+#13 sha256:37fb86c2a767b88d500c6872195f88078f64765fe0d2f9cc375cc2efbd4c0a41 29.86MB / 29.86MB 1.0s done
+#13 sha256:68bced9e0afa4479df17c3646e27c7c7e9ce9ba70c0e6c73b6826487b89037d9 1.29MB / 1.29MB 0.7s done
+#13 sha256:2dc99d2d0a39fce31e37615eb4c932e16dcc4c2b0ce9993714280081b5dbe085 12.12MB / 12.12MB 1.2s done
+#13 sha256:05e0eee5572e9c9f50408a2132590133b830a668a1cf2ff2b150f19c57707e2b 248B / 248B 1.1s done
+#13 extracting sha256:37fb86c2a767b88d500c6872195f88078f64765fe0d2f9cc375cc2efbd4c0a41 0.3s
+#13 extracting sha256:37fb86c2a767b88d500c6872195f88078f64765fe0d2f9cc375cc2efbd4c0a41 1.3s done
+#13 extracting sha256:68bced9e0afa4479df17c3646e27c7c7e9ce9ba70c0e6c73b6826487b89037d9
+#13 extracting sha256:68bced9e0afa4479df17c3646e27c7c7e9ce9ba70c0e6c73b6826487b89037d9 0.4s done
+#13 extracting sha256:2dc99d2d0a39fce31e37615eb4c932e16dcc4c2b0ce9993714280081b5dbe085
+#13 extracting sha256:2dc99d2d0a39fce31e37615eb4c932e16dcc4c2b0ce9993714280081b5dbe085 0.9s done
+#13 extracting sha256:05e0eee5572e9c9f50408a2132590133b830a668a1cf2ff2b150f19c57707e2b done
+#13 DONE 4.3s
+
+#11 [web stage-1 1/2] FROM docker.io/library/nginx:stable-alpine@sha256:caf4e1e032a20f9c3c5e28fc7f25ffd768ad8677b4975c54193075997b3a97e3
+#11 sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17 3.85MB / 3.85MB 2.4s done
+#11 sha256:1197128e240d4992d94c8fb2e02d4fdfcc322edd93284d4554f373e6bea26347 1.88MB / 1.88MB 2.5s done
+#11 extracting sha256:881fc932939efef04ca120ad44bbd2c0917851eb247aa4995428afb1e80ede17 0.2s done
+#11 sha256:2631dab31190e0d943e4507b03d9779a175b29f9e26c5ca6f3aa9b5a3eca085f 629B / 629B 2.7s done
+#11 extracting sha256:1197128e240d4992d94c8fb2e02d4fdfcc322edd93284d4554f373e6bea26347 0.1s done
+#11 sha256:c188e096e949fe3fc59b6d9064dd79c8756cb59192e2cd45e517a1596a4eecb9 965B / 965B 2.8s done
+#11 sha256:4f56c55085272a26a46df16f955babdda5cecfddc33af12da05949d8f3d090bb 405B / 405B 3.0s done
+#11 sha256:cc0947b1a7749bf524cc9478958d6672596e4cbbd64cf51cbda80d83f9d9fb94 1.21kB / 1.21kB 3.0s done
+#11 extracting sha256:2631dab31190e0d943e4507b03d9779a175b29f9e26c5ca6f3aa9b5a3eca085f done
+#11 extracting sha256:c188e096e949fe3fc59b6d9064dd79c8756cb59192e2cd45e517a1596a4eecb9 done
+#11 sha256:61e5576dbd35066cbf8c82173461b55753a332478a7c09e03343f1c06930c173 1.40kB / 1.40kB 3.1s done
+#11 extracting sha256:4f56c55085272a26a46df16f955babdda5cecfddc33af12da05949d8f3d090bb done
+#11 sha256:893b1907c4dc2c288f4196b6dcd656a72d9e53d712df4c88da0085c9e005e754 20.31MB / 20.31MB 3.6s done
+#11 extracting sha256:cc0947b1a7749bf524cc9478958d6672596e4cbbd64cf51cbda80d83f9d9fb94 done
+#11 extracting sha256:61e5576dbd35066cbf8c82173461b55753a332478a7c09e03343f1c06930c173 done
+#11 extracting sha256:893b1907c4dc2c288f4196b6dcd656a72d9e53d712df4c88da0085c9e005e754 0.5s done
+#11 DONE 4.3s
+
+#14 [web build 1/8] FROM docker.io/library/node:24-slim@sha256:dc26ae92c9fb15cf6b1d63e20f0944b2efe0f115b20e00be48fb23fceb061c54
+#14 resolve docker.io/library/node:24-slim@sha256:dc26ae92c9fb15cf6b1d63e20f0944b2efe0f115b20e00be48fb23fceb061c54 0.0s done
+#14 sha256:5ba3c1ded6eada2ea16582327a87c672fb3889fca362ee3ac0d78ed742b583c0 6.71kB / 6.71kB done
+#14 sha256:dc26ae92c9fb15cf6b1d63e20f0944b2efe0f115b20e00be48fb23fceb061c54 3.93kB / 3.93kB done
+#14 sha256:0e2646ab57e77b7a384a0cb59b6815b182c77e1f9c3ba36bd8435bd9c4e6680e 1.93kB / 1.93kB done
+#14 sha256:dd051e1b8c92ff101fa3071ab97ea4924885942f15644e01c3dc095764e863e3 28.25MB / 28.25MB 1.9s done
+#14 sha256:22a7c5e442cd30f0c37eb73f2f6d91be1c6b63bd1c4278641b042fe77b260f33 3.31kB / 3.31kB 1.4s done
+#14 sha256:5030a48eb5b08bea228f0db8440fed216cf91b5ca4d999bc2a692c2eb0a60114 51.10MB / 51.10MB 2.7s done
+#14 sha256:e727da478d47d626146e734dd426cad789beb1fe49c55a06a175621d30f31064 1.71MB / 1.71MB 1.9s done
+#14 extracting sha256:dd051e1b8c92ff101fa3071ab97ea4924885942f15644e01c3dc095764e863e3 1.7s done
+#14 sha256:c34f02d00fde0767e1607c15d336cb71414e607acb0b4e63680a37c007b76204 448B / 448B 2.2s done
+#14 extracting sha256:22a7c5e442cd30f0c37eb73f2f6d91be1c6b63bd1c4278641b042fe77b260f33 done
+#14 extracting sha256:5030a48eb5b08bea228f0db8440fed216cf91b5ca4d999bc2a692c2eb0a60114 0.2s
+#14 ...
+
+#15 [api stage-1 2/7] COPY --from=uv /uv /usr/local/bin/uv
+#15 DONE 0.4s
+
+#14 [web build 1/8] FROM docker.io/library/node:24-slim@sha256:dc26ae92c9fb15cf6b1d63e20f0944b2efe0f115b20e00be48fb23fceb061c54
+#14 ...
+
+#16 [api stage-1 3/7] WORKDIR /app
+#16 DONE 0.6s
+
+#14 [web build 1/8] FROM docker.io/library/node:24-slim@sha256:dc26ae92c9fb15cf6b1d63e20f0944b2efe0f115b20e00be48fb23fceb061c54
+#14 ...
+
+#17 [api stage-1 4/7] COPY pyproject.toml uv.lock ./
+#17 DONE 0.3s
+
+#14 [web build 1/8] FROM docker.io/library/node:24-slim@sha256:dc26ae92c9fb15cf6b1d63e20f0944b2efe0f115b20e00be48fb23fceb061c54
+#14 ...
+
+#18 [api stage-1 5/7] COPY engine/goldnam_engine ./engine/goldnam_engine
+#18 DONE 0.3s
+
+#14 [web build 1/8] FROM docker.io/library/node:24-slim@sha256:dc26ae92c9fb15cf6b1d63e20f0944b2efe0f115b20e00be48fb23fceb061c54
+#14 extracting sha256:5030a48eb5b08bea228f0db8440fed216cf91b5ca4d999bc2a692c2eb0a60114 1.6s done
+#14 extracting sha256:e727da478d47d626146e734dd426cad789beb1fe49c55a06a175621d30f31064
+#14 ...
+
+#19 [api stage-1 6/7] COPY api ./api
+#19 DONE 0.3s
+
+#14 [web build 1/8] FROM docker.io/library/node:24-slim@sha256:dc26ae92c9fb15cf6b1d63e20f0944b2efe0f115b20e00be48fb23fceb061c54
+#14 extracting sha256:e727da478d47d626146e734dd426cad789beb1fe49c55a06a175621d30f31064 0.4s done
+#14 extracting sha256:c34f02d00fde0767e1607c15d336cb71414e607acb0b4e63680a37c007b76204 done
+#14 DONE 6.7s
+
+#20 [api stage-1 7/7] RUN uv sync --frozen --no-dev --extra api
+#20 0.657 Using CPython 3.12.16 interpreter at: /usr/local/bin/python3
+#20 0.657 Creating virtual environment at: .venv
+#20 0.701    Building goldnam-sachs @ file:///app
+#20 0.765 error: Failed to download `websockets==17.4`
+#20 0.765   cause: Failed to fetch: https://files.pythonhosted.org/packages/cb/18/6229d6583031ca81d092a0cd887a13a57b402fb555acc323d39b45967eb7/websockets-17.4-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl
+#20 0.765   cause: error sending request for url (https://files.pythonhosted.org/packages/cb/18/6229d6583031ca81d092a0cd887a13a57b402fb555acc323d39b45967eb7/websockets-17.4-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl)
+#20 0.765   cause: client error (Connect)
+#20 0.765   cause: invalid peer certificate: UnknownIssuer
+#20 0.765 
+#20 0.765 hint: `websockets` (v17.4) was included because `goldnam-sachs` depends on `yfinance` (v1.8.0) which depends on `websockets`
+#20 0.765 
+#20 0.765 hint: Consider enabling use of system TLS certificates with the `--system-certs` command-line flag
+#20 ERROR: process "/bin/sh -c uv sync --frozen --no-dev --extra api" did not complete successfully: exit code: 2
+
+#21 [web build 2/8] WORKDIR /app
+#21 DONE 0.4s
+------
+ > [api stage-1 7/7] RUN uv sync --frozen --no-dev --extra api:
+0.701    Building goldnam-sachs @ file:///app
+0.765 error: Failed to download `websockets==17.4`
+0.765   cause: Failed to fetch: https://files.pythonhosted.org/packages/cb/18/6229d6583031ca81d092a0cd887a13a57b402fb555acc323d39b45967eb7/websockets-17.4-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl
+0.765   cause: error sending request for url (https://files.pythonhosted.org/packages/cb/18/6229d6583031ca81d092a0cd887a13a57b402fb555acc323d39b45967eb7/websockets-17.4-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl)
+0.765   cause: client error (Connect)
+0.765   cause: invalid peer certificate: UnknownIssuer
+0.765 
+0.765 hint: `websockets` (v17.4) was included because `goldnam-sachs` depends on `yfinance` (v1.8.0) which depends on `websockets`
+0.765 
+0.765 hint: Consider enabling use of system TLS certificates with the `--system-certs` command-line flag
+------
+Dockerfile:8
+
+--------------------
+
+   6 |     COPY engine/goldnam_engine ./engine/goldnam_engine
+
+   7 |     COPY api ./api
+
+   8 | >>> RUN uv sync --frozen --no-dev --extra api
+
+   9 |     ENV PATH="/app/.venv/bin:$PATH"
+
+  10 |     CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+--------------------
+
+target api: failed to solve: process "/bin/sh -c uv sync --frozen --no-dev --extra api" did not complete successfully: exit code: 2
+

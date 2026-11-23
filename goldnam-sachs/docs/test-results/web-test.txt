@@ -1,0 +1,10 @@
+$ vitest run
+
+ RUN  v5.1.1 /workspace/Stock-Analyzer/Goldnam Sachs/web
+
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  02:44:20
+   Duration  177ms (transform 60%, import 24%, worker 9%, tests 6%)
+

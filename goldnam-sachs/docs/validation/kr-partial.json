@@ -1,0 +1,209 @@
+{
+  "run_id": "16b1418a-2d2f-43d0-aad6-f4cdbda552f6",
+  "app_version": "0.0.0-a.1",
+  "score_version": "score-v0.1",
+  "created_at": "2026-11-22T18:47:17.167674+00:00",
+  "market": "kr",
+  "start": "2015-01-01",
+  "end": "2026-11-20",
+  "universe_count": 3,
+  "prices_available": 1,
+  "universe_as_of": "None",
+  "bias": "구성 조회 실패: KeyError",
+  "scope": "selected-symbol smoke",
+  "variants_tried": 1,
+  "parameters_fit": false,
+  "costs": {
+    "buy_fee": 0.00015,
+    "sell_fee": 0.00015,
+    "sell_tax": 0.002,
+    "slippage": 0.0005
+  },
+  "cost_caveat": "현재 세율을 전체 기간에 고정 적용한 비용 시나리오; 과거 세율 복원이 아님",
+  "composite_evidence": "미검증",
+  "fundamentals": "PIT 재무 미포함; 가격 팩터만 검증, 종합 점수 근거로 전용 금지",
+  "rankings": {
+    "momentum-21": {
+      "months": 0,
+      "evidence": "미검증"
+    },
+    "momentum-63": {
+      "months": 0,
+      "evidence": "미검증"
+    },
+    "trend-21": {
+      "months": 0,
+      "evidence": "미검증"
+    },
+    "trend-63": {
+      "months": 0,
+      "evidence": "미검증"
+    }
+  },
+  "events": {
+    "pullback-A": {
+      "n": 67,
+      "expected_r": -0.01906448123094898,
+      "expected_return": -0.004000803833334871,
+      "win_fraction": 0.5522388059701493,
+      "payoff_ratio": 0.7768860578068864,
+      "profit_factor": 0.9581594712951598,
+      "max_loss_streak": 3,
+      "average_holding_days": 3.791044776119403,
+      "random_repetitions": 20,
+      "random_expected_r": -0.020459491015695427,
+      "excess_expected_r": 0.0013950097847464475,
+      "monthly_excess_expected_r": 0.13791876629088454,
+      "excess_ci95": [
+        -0.16927516481689422,
+        0.5723164013780901
+      ],
+      "ci_definition": "동일 종목·동일 달 20회 무작위 진입 대비 월별 평균 기대값 차이; 3개월 날짜 블록 부트스트랩"
+    },
+    "pullback-B": {
+      "n": 62,
+      "expected_r": 0.010167188717049667,
+      "expected_return": 0.0030893782671404585,
+      "win_fraction": 0.5161290322580645,
+      "payoff_ratio": 0.9580272984207758,
+      "profit_factor": 1.021895784982161,
+      "max_loss_streak": 4,
+      "average_holding_days": 7.983870967741935,
+      "random_repetitions": 20,
+      "random_expected_r": 0.12121867655235952,
+      "excess_expected_r": -0.11105148783530985,
+      "monthly_excess_expected_r": 0.09301062922599804,
+      "excess_ci95": [
+        -0.15841179325151605,
+        0.3723586299802368
+      ],
+      "ci_definition": "동일 종목·동일 달 20회 무작위 진입 대비 월별 평균 기대값 차이; 3개월 날짜 블록 부트스트랩"
+    },
+    "pullback-C": {
+      "n": 77,
+      "expected_r": 0.7002274613549379,
+      "expected_return": 0.008740395374705029,
+      "win_fraction": 0.2857142857142857,
+      "payoff_ratio": 6.802161892587944,
+      "profit_factor": 2.720864757035178,
+      "max_loss_streak": 7,
+      "average_holding_days": 6.012987012987013,
+      "random_repetitions": 20,
+      "random_expected_r": 0.13361935300441144,
+      "excess_expected_r": 0.5666081083505264,
+      "monthly_excess_expected_r": 0.902539004086057,
+      "excess_ci95": [
+        -0.12449631301118802,
+        2.6181808667265285
+      ],
+      "ci_definition": "동일 종목·동일 달 20회 무작위 진입 대비 월별 평균 기대값 차이; 3개월 날짜 블록 부트스트랩"
+    },
+    "momentum-A": {
+      "n": 11,
+      "expected_r": 0.12463820060332682,
+      "expected_return": 0.0028834052540228712,
+      "win_fraction": 0.7272727272727273,
+      "payoff_ratio": 0.5463775258295744,
+      "profit_factor": 1.4570067355455318,
+      "max_loss_streak": 1,
+      "average_holding_days": 4.181818181818182,
+      "random_repetitions": 20,
+      "random_expected_r": 0.10763104299517016,
+      "excess_expected_r": 0.01700715760815666,
+      "monthly_excess_expected_r": 0.12887135865830385,
+      "excess_ci95": [
+        -0.149199505085761,
+        0.44043031737252614
+      ],
+      "ci_definition": "동일 종목·동일 달 20회 무작위 진입 대비 월별 평균 기대값 차이; 3개월 날짜 블록 부트스트랩"
+    },
+    "momentum-B": {
+      "n": 9,
+      "expected_r": 0.36067260675501817,
+      "expected_return": 0.00535696418891667,
+      "win_fraction": 0.6666666666666666,
+      "payoff_ratio": 1.245779394765447,
+      "profit_factor": 2.491558789530894,
+      "max_loss_streak": 1,
+      "average_holding_days": 13.444444444444445,
+      "random_repetitions": 20,
+      "random_expected_r": 0.24949924714566393,
+      "excess_expected_r": 0.11117335960935423,
+      "monthly_excess_expected_r": 0.22939160208011644,
+      "excess_ci95": [
+        0.030944404248209118,
+        0.46591511292382876
+      ],
+      "ci_definition": "동일 종목·동일 달 20회 무작위 진입 대비 월별 평균 기대값 차이; 3개월 날짜 블록 부트스트랩"
+    },
+    "momentum-C": {
+      "n": 9,
+      "expected_r": 0.522998529180351,
+      "expected_return": 0.007900622181066385,
+      "win_fraction": 0.4444444444444444,
+      "payoff_ratio": 3.828616007713081,
+      "profit_factor": 3.0628928061704648,
+      "max_loss_streak": 2,
+      "average_holding_days": 12.666666666666666,
+      "random_repetitions": 20,
+      "random_expected_r": 0.5896175186179726,
+      "excess_expected_r": -0.06661898943762168,
+      "monthly_excess_expected_r": 0.058765459640203174,
+      "excess_ci95": [
+        -0.13735783109691682,
+        0.25982572539293175
+      ],
+      "ci_definition": "동일 종목·동일 달 20회 무작위 진입 대비 월별 평균 기대값 차이; 3개월 날짜 블록 부트스트랩"
+    }
+  },
+  "portfolios": {
+    "pullback-A": {
+      "entries": 0,
+      "rejected": 67,
+      "return": 0.0,
+      "max_drawdown": 0.0,
+      "caveat": "정수 수량; 알 수 없는 업종은 하나의 미확인 그룹으로 제한. 기존 포지션의 최초 손절 기준 보수적 히트. 동일 날짜는 티커 순서, 미래 성과로 선택하지 않음."
+    },
+    "pullback-B": {
+      "entries": 0,
+      "rejected": 62,
+      "return": 0.0,
+      "max_drawdown": 0.0,
+      "caveat": "정수 수량; 알 수 없는 업종은 하나의 미확인 그룹으로 제한. 기존 포지션의 최초 손절 기준 보수적 히트. 동일 날짜는 티커 순서, 미래 성과로 선택하지 않음."
+    },
+    "pullback-C": {
+      "entries": 0,
+      "rejected": 77,
+      "return": 0.0,
+      "max_drawdown": 0.0,
+      "caveat": "정수 수량; 알 수 없는 업종은 하나의 미확인 그룹으로 제한. 기존 포지션의 최초 손절 기준 보수적 히트. 동일 날짜는 티커 순서, 미래 성과로 선택하지 않음."
+    },
+    "momentum-A": {
+      "entries": 0,
+      "rejected": 11,
+      "return": 0.0,
+      "max_drawdown": 0.0,
+      "caveat": "정수 수량; 알 수 없는 업종은 하나의 미확인 그룹으로 제한. 기존 포지션의 최초 손절 기준 보수적 히트. 동일 날짜는 티커 순서, 미래 성과로 선택하지 않음."
+    },
+    "momentum-B": {
+      "entries": 0,
+      "rejected": 9,
+      "return": 0.0,
+      "max_drawdown": 0.0,
+      "caveat": "정수 수량; 알 수 없는 업종은 하나의 미확인 그룹으로 제한. 기존 포지션의 최초 손절 기준 보수적 히트. 동일 날짜는 티커 순서, 미래 성과로 선택하지 않음."
+    },
+    "momentum-C": {
+      "entries": 0,
+      "rejected": 9,
+      "return": 0.0,
+      "max_drawdown": 0.0,
+      "caveat": "정수 수량; 알 수 없는 업종은 하나의 미확인 그룹으로 제한. 기존 포지션의 최초 손절 기준 보수적 히트. 동일 날짜는 티커 순서, 미래 성과로 선택하지 않음."
+    }
+  },
+  "default_exit": null,
+  "default_exit_reason": "검증 근거를 확인하기 전 자동 선택하지 않음",
+  "commit": "01fbb136a6e9af9aa9ea19cdbfc998a496847629",
+  "price_factor_correlation": null,
+  "events_skipped": false,
+  "elapsed_seconds": 19.563674222999907
+}

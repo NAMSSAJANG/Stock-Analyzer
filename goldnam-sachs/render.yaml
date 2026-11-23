@@ -1,0 +1,46 @@
+# Prepared only. NAMSSA creates this NEW Blueprint; no existing service is managed.
+# Verified 2026-11-23: Web $7 + DB $6 + 1 GB storage $0.30 = $13.30/month before tax/usage.
+services:
+  - type: web
+    name: goldnam-sachs
+    runtime: docker
+    branch: goldnam/v0.0.0-a.1
+    rootDir: goldnam-sachs
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    region: singapore
+    plan: 0.5c-512mb
+    numInstances: 1
+    autoDeployTrigger: 'off'
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: goldnam-sachs-db
+          property: connectionString
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: APP_PASSCODE_HASH
+        sync: false
+      - key: OPENDART_API_KEY
+        sync: false
+      - key: SEC_USER_AGENT
+        sync: false
+      - key: WEB_STATIC_DIR
+        value: /app/web/out
+      - key: PYTHONUNBUFFERED
+        value: '1'
+databases:
+  - name: goldnam-sachs-db
+    region: singapore
+    plan: 0.1c-256mb
+    diskSizeGB: 1
+    storageAutoscalingEnabled: false
+    postgresMajorVersion: '18'
+    databaseName: goldnam
+    user: goldnam
+    # GitHub-hosted jobs have changing outbound IPs. TLS + database credentials required.
+    # To disallow external jobs, replace with [] and run batches on a trusted internal host.
+    ipAllowList:
+      - source: 0.0.0.0/0
+        description: GitHub Actions external TLS connection

@@ -1,0 +1,2 @@
+events 3/3
+{"run_id": "6c24124a-74d8-4e5e-af19-b4a29d870579", "market": "us", "scope": "selected-symbol smoke", "prices_available": 3, "elapsed_seconds": 19.411499620000086, "composite_evidence": "미검증"}

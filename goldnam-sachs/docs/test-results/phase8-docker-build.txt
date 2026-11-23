@@ -1,0 +1,387 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.39kB done
+#1 DONE 0.0s
+
+#2 resolve image config for docker-image://docker.io/docker/dockerfile:1
+#2 DONE 1.0s
+
+#3 docker-image://docker.io/docker/dockerfile:1@sha256:572cebbc2b15e6f84c077742952674889cb63cd5e9b80abdffcbe587b6f19183
+#3 resolve docker.io/docker/dockerfile:1@sha256:572cebbc2b15e6f84c077742952674889cb63cd5e9b80abdffcbe587b6f19183 done
+#3 sha256:572cebbc2b15e6f84c077742952674889cb63cd5e9b80abdffcbe587b6f19183 9.08kB / 9.08kB done
+#3 sha256:5ced2b5924f16646d161345ccad27201d92ad077c3037ad9eff7b630528fbf12 1.13kB / 1.13kB done
+#3 sha256:9f6532f13aff6f7b95b5a64912de3a4f05c3d902168bcedbc3d385c3cbdefdf9 1.41kB / 1.41kB done
+#3 sha256:03f648a05b5780c2a0e4b43c93eb1838c6b9b32131b25f4199f42a788d106315 0B / 15.19MB 0.1s
+#3 sha256:03f648a05b5780c2a0e4b43c93eb1838c6b9b32131b25f4199f42a788d106315 2.10MB / 15.19MB 0.3s
+#3 sha256:03f648a05b5780c2a0e4b43c93eb1838c6b9b32131b25f4199f42a788d106315 8.39MB / 15.19MB 0.4s
+#3 sha256:03f648a05b5780c2a0e4b43c93eb1838c6b9b32131b25f4199f42a788d106315 15.19MB / 15.19MB 0.5s
+#3 extracting sha256:03f648a05b5780c2a0e4b43c93eb1838c6b9b32131b25f4199f42a788d106315
+#3 sha256:03f648a05b5780c2a0e4b43c93eb1838c6b9b32131b25f4199f42a788d106315 15.19MB / 15.19MB 0.5s done
+#3 extracting sha256:03f648a05b5780c2a0e4b43c93eb1838c6b9b32131b25f4199f42a788d106315 0.2s done
+#3 DONE 0.7s
+
+#4 [internal] load metadata for docker.io/library/node:24-bookworm-slim
+#4 ...
+
+#5 [internal] load metadata for ghcr.io/astral-sh/uv:0.13.9
+#5 DONE 1.1s
+
+#6 [internal] load metadata for docker.io/library/python:3.12-slim
+#6 DONE 1.1s
+
+#4 [internal] load metadata for docker.io/library/node:24-bookworm-slim
+#4 DONE 1.1s
+
+#7 [internal] load .dockerignore
+#7 transferring context: 268B done
+#7 DONE 0.0s
+
+#8 [stage-2  1/10] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#8 resolve docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b 0.0s done
+#8 sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b 10.37kB / 10.37kB done
+#8 sha256:05a994d2344eb364cc186910f4fc8786a38215f39f00d0acc25bff33a08f4177 1.75kB / 1.75kB done
+#8 sha256:78976a69c067520ef8be34cde307ef9f6fea6dcefa50edb57039773d241ca0db 5.66kB / 5.66kB done
+#8 DONE 0.1s
+
+#9 [internal] load build context
+#9 transferring context: 3.67MB 0.1s done
+#9 DONE 0.1s
+
+#10 [web 1/7] FROM docker.io/library/node:24-bookworm-slim@sha256:dc26ae92c9fb15cf6b1d63e20f0944b2efe0f115b20e00be48fb23fceb061c54
+#10 resolve docker.io/library/node:24-bookworm-slim@sha256:dc26ae92c9fb15cf6b1d63e20f0944b2efe0f115b20e00be48fb23fceb061c54 0.0s done
+#10 sha256:5030a48eb5b08bea228f0db8440fed216cf91b5ca4d999bc2a692c2eb0a60114 0B / 51.10MB 0.2s
+#10 sha256:dc26ae92c9fb15cf6b1d63e20f0944b2efe0f115b20e00be48fb23fceb061c54 3.93kB / 3.93kB done
+#10 sha256:0e2646ab57e77b7a384a0cb59b6815b182c77e1f9c3ba36bd8435bd9c4e6680e 1.93kB / 1.93kB done
+#10 sha256:5ba3c1ded6eada2ea16582327a87c672fb3889fca362ee3ac0d78ed742b583c0 6.71kB / 6.71kB done
+#10 sha256:dd051e1b8c92ff101fa3071ab97ea4924885942f15644e01c3dc095764e863e3 0B / 28.25MB 0.2s
+#10 sha256:22a7c5e442cd30f0c37eb73f2f6d91be1c6b63bd1c4278641b042fe77b260f33 0B / 3.31kB 0.2s
+#10 sha256:dd051e1b8c92ff101fa3071ab97ea4924885942f15644e01c3dc095764e863e3 5.24MB / 28.25MB 0.3s
+#10 sha256:dd051e1b8c92ff101fa3071ab97ea4924885942f15644e01c3dc095764e863e3 15.73MB / 28.25MB 0.5s
+#10 sha256:22a7c5e442cd30f0c37eb73f2f6d91be1c6b63bd1c4278641b042fe77b260f33 3.31kB / 3.31kB 0.4s done
+#10 sha256:e727da478d47d626146e734dd426cad789beb1fe49c55a06a175621d30f31064 0B / 1.71MB 0.5s
+#10 sha256:5030a48eb5b08bea228f0db8440fed216cf91b5ca4d999bc2a692c2eb0a60114 5.24MB / 51.10MB 0.6s
+#10 sha256:dd051e1b8c92ff101fa3071ab97ea4924885942f15644e01c3dc095764e863e3 18.87MB / 28.25MB 0.6s
+#10 sha256:dd051e1b8c92ff101fa3071ab97ea4924885942f15644e01c3dc095764e863e3 22.02MB / 28.25MB 0.7s
+#10 sha256:5030a48eb5b08bea228f0db8440fed216cf91b5ca4d999bc2a692c2eb0a60114 10.49MB / 51.10MB 0.8s
+#10 sha256:dd051e1b8c92ff101fa3071ab97ea4924885942f15644e01c3dc095764e863e3 25.17MB / 28.25MB 0.8s
+#10 sha256:e727da478d47d626146e734dd426cad789beb1fe49c55a06a175621d30f31064 1.71MB / 1.71MB 0.7s done
+#10 sha256:c34f02d00fde0767e1607c15d336cb71414e607acb0b4e63680a37c007b76204 0B / 448B 0.8s
+#10 sha256:5030a48eb5b08bea228f0db8440fed216cf91b5ca4d999bc2a692c2eb0a60114 13.63MB / 51.10MB 0.9s
+#10 sha256:dd051e1b8c92ff101fa3071ab97ea4924885942f15644e01c3dc095764e863e3 28.25MB / 28.25MB 0.9s done
+#10 sha256:5030a48eb5b08bea228f0db8440fed216cf91b5ca4d999bc2a692c2eb0a60114 20.97MB / 51.10MB 1.0s
+#10 sha256:c34f02d00fde0767e1607c15d336cb71414e607acb0b4e63680a37c007b76204 448B / 448B 1.0s done
+#10 extracting sha256:dd051e1b8c92ff101fa3071ab97ea4924885942f15644e01c3dc095764e863e3
+#10 sha256:5030a48eb5b08bea228f0db8440fed216cf91b5ca4d999bc2a692c2eb0a60114 26.21MB / 51.10MB 1.1s
+#10 sha256:5030a48eb5b08bea228f0db8440fed216cf91b5ca4d999bc2a692c2eb0a60114 29.36MB / 51.10MB 1.2s
+#10 sha256:5030a48eb5b08bea228f0db8440fed216cf91b5ca4d999bc2a692c2eb0a60114 36.70MB / 51.10MB 1.4s
+#10 sha256:5030a48eb5b08bea228f0db8440fed216cf91b5ca4d999bc2a692c2eb0a60114 39.85MB / 51.10MB 1.5s
+#10 sha256:5030a48eb5b08bea228f0db8440fed216cf91b5ca4d999bc2a692c2eb0a60114 42.99MB / 51.10MB 1.6s
+#10 sha256:5030a48eb5b08bea228f0db8440fed216cf91b5ca4d999bc2a692c2eb0a60114 46.14MB / 51.10MB 1.7s
+#10 sha256:5030a48eb5b08bea228f0db8440fed216cf91b5ca4d999bc2a692c2eb0a60114 51.10MB / 51.10MB 1.8s done
+#10 ...
+
+#11 [uv 1/1] FROM ghcr.io/astral-sh/uv:0.13.9@sha256:d3b601f0c7b118bc1753febf7c41cc80981df678445e0254284eecf84db79a7d
+#11 resolve ghcr.io/astral-sh/uv:0.13.9@sha256:d3b601f0c7b118bc1753febf7c41cc80981df678445e0254284eecf84db79a7d 0.0s done
+#11 sha256:d3b601f0c7b118bc1753febf7c41cc80981df678445e0254284eecf84db79a7d 2.19kB / 2.19kB done
+#11 sha256:49fe3c925d4b7a84ba2ef19883307bba2bbcf929a22040afb46f2dd092d13aeb 669B / 669B done
+#11 sha256:a85d08de06542c59ea4a303dec5f82ef93a25e2d8edf5852a6cbee63fc5b23b1 1.30kB / 1.30kB done
+#11 sha256:6194b0176b3040f6b7ddcb49a3eb00c776bd1c508e0012f743d1d9dc2611c37a 19.60MB / 19.60MB 1.7s done
+#11 sha256:738af053281ffefe1f1e338797802de818be2055e29d46d982b10d1605f2e7b6 98B / 98B 1.3s done
+#11 extracting sha256:6194b0176b3040f6b7ddcb49a3eb00c776bd1c508e0012f743d1d9dc2611c37a 0.6s done
+#11 extracting sha256:738af053281ffefe1f1e338797802de818be2055e29d46d982b10d1605f2e7b6 done
+#11 DONE 2.6s
+
+#10 [web 1/7] FROM docker.io/library/node:24-bookworm-slim@sha256:dc26ae92c9fb15cf6b1d63e20f0944b2efe0f115b20e00be48fb23fceb061c54
+#10 extracting sha256:dd051e1b8c92ff101fa3071ab97ea4924885942f15644e01c3dc095764e863e3 2.7s done
+#10 extracting sha256:22a7c5e442cd30f0c37eb73f2f6d91be1c6b63bd1c4278641b042fe77b260f33 done
+#10 extracting sha256:5030a48eb5b08bea228f0db8440fed216cf91b5ca4d999bc2a692c2eb0a60114
+#10 ...
+
+#12 [stage-2  2/10] COPY --from=uv /uv /usr/local/bin/uv
+#12 DONE 2.7s
+
+#10 [web 1/7] FROM docker.io/library/node:24-bookworm-slim@sha256:dc26ae92c9fb15cf6b1d63e20f0944b2efe0f115b20e00be48fb23fceb061c54
+#10 ...
+
+#13 [stage-2  3/10] WORKDIR /app
+#13 DONE 1.2s
+
+#14 [stage-2  4/10] COPY pyproject.toml uv.lock ./
+#14 DONE 2.7s
+
+#10 [web 1/7] FROM docker.io/library/node:24-bookworm-slim@sha256:dc26ae92c9fb15cf6b1d63e20f0944b2efe0f115b20e00be48fb23fceb061c54
+#10 extracting sha256:5030a48eb5b08bea228f0db8440fed216cf91b5ca4d999bc2a692c2eb0a60114 2.9s done
+#10 extracting sha256:e727da478d47d626146e734dd426cad789beb1fe49c55a06a175621d30f31064
+#10 ...
+
+#15 [stage-2  5/10] COPY --chmod=755 engine/goldnam_engine ./engine/goldnam_engine
+#15 DONE 2.0s
+
+#10 [web 1/7] FROM docker.io/library/node:24-bookworm-slim@sha256:dc26ae92c9fb15cf6b1d63e20f0944b2efe0f115b20e00be48fb23fceb061c54
+#10 extracting sha256:e727da478d47d626146e734dd426cad789beb1fe49c55a06a175621d30f31064 2.9s done
+#10 extracting sha256:c34f02d00fde0767e1607c15d336cb71414e607acb0b4e63680a37c007b76204 done
+#10 ...
+
+#16 [stage-2  6/10] COPY --chmod=755 jobs ./jobs
+#16 DONE 1.6s
+
+#10 [web 1/7] FROM docker.io/library/node:24-bookworm-slim@sha256:dc26ae92c9fb15cf6b1d63e20f0944b2efe0f115b20e00be48fb23fceb061c54
+#10 ...
+
+#17 [stage-2  7/10] COPY --chmod=755 api ./api
+#17 ...
+
+#10 [web 1/7] FROM docker.io/library/node:24-bookworm-slim@sha256:dc26ae92c9fb15cf6b1d63e20f0944b2efe0f115b20e00be48fb23fceb061c54
+#10 DONE 13.1s
+
+#18 [web 2/7] WORKDIR /build
+#18 ...
+
+#17 [stage-2  7/10] COPY --chmod=755 api ./api
+#17 DONE 0.9s
+
+#19 [stage-2  8/10] COPY --chmod=755 scripts/serve.py ./scripts/serve.py
+#19 ...
+
+#18 [web 2/7] WORKDIR /build
+#18 DONE 1.3s
+
+#20 [web 3/7] COPY web/package.json web/pnpm-lock.yaml ./web/
+#20 ...
+
+#19 [stage-2  8/10] COPY --chmod=755 scripts/serve.py ./scripts/serve.py
+#19 DONE 1.6s
+
+#21 [stage-2  9/10] RUN --mount=type=secret,id=build_ca     if [ -f /run/secrets/build_ca ]; then export SSL_CERT_FILE=/run/secrets/build_ca; fi;     uv sync --system-certs --frozen --no-dev --extra api &&     useradd --create-home --uid 10001 goldnam && mkdir -p /app/.data && chown goldnam /app/.data
+#21 ...
+
+#20 [web 3/7] COPY web/package.json web/pnpm-lock.yaml ./web/
+#20 DONE 2.0s
+
+#22 [web 4/7] RUN --mount=type=secret,id=build_ca     if [ -f /run/secrets/build_ca ]; then export NODE_EXTRA_CA_CERTS=/run/secrets/build_ca; fi;     npm install --global pnpm@12.21.0 && cd web && pnpm install --frozen-lockfile
+#22 ...
+
+#21 [stage-2  9/10] RUN --mount=type=secret,id=build_ca     if [ -f /run/secrets/build_ca ]; then export SSL_CERT_FILE=/run/secrets/build_ca; fi;     uv sync --system-certs --frozen --no-dev --extra api &&     useradd --create-home --uid 10001 goldnam && mkdir -p /app/.data && chown goldnam /app/.data
+#21 2.160 Using CPython 3.12.16 interpreter at: /usr/local/bin/python3
+#21 2.160 Creating virtual environment at: .venv
+#21 2.380    Building goldnam-sachs @ file:///app
+#21 2.846 Downloading pillow (6.8MiB)
+#21 2.846 Downloading sqlalchemy (4.5MiB)
+#21 2.847 Downloading lxml (5.0MiB)
+#21 2.847 Downloading fonttools (5.2MiB)
+#21 2.852 Downloading psycopg-binary (3.7MiB)
+#21 2.852 Downloading numpy (15.0MiB)
+#21 2.852 Downloading curl-cffi (13.4MiB)
+#21 2.853 Downloading matplotlib (9.4MiB)
+#21 2.853 Downloading kiwisolver (1.4MiB)
+#21 2.854 Downloading plotly (9.2MiB)
+#21 2.854 Downloading pyarrow (52.5MiB)
+#21 2.854 Downloading pandas (11.5MiB)
+#21 2.855 Downloading scipy (33.7MiB)
+#21 2.856 Downloading pydantic-core (2.2MiB)
+#21 2.856 Downloading setuptools (1.0MiB)
+#21 2.866 Downloading pykrx (2.1MiB)
+#21 3.801  Downloaded curl-cffi
+#21 4.398  Downloaded numpy
+#21 4.484  Downloaded matplotlib
+#21 4.942  Downloaded scipy
+#21 4.950  Downloaded plotly
+#21 5.086  Downloaded pillow
+#21 5.162  Downloaded fonttools
+#21 5.284  Downloaded lxml
+#21 5.335  Downloaded sqlalchemy
+#21 5.696  Downloaded psycopg-binary
+#21 5.813  Downloaded pydantic-core
+#21 5.819  Downloaded kiwisolver
+#21 5.982  Downloaded setuptools
+#21 5.982  Downloaded pykrx
+#21 6.498  Downloaded pyarrow
+#21 6.532  Downloaded pandas
+#21 7.176       Built goldnam-sachs @ file:///app
+#21 7.179 Prepared 71 packages in 5.00s
+#21 7.286 Installed 71 packages in 106ms
+#21 7.286  + annotated-doc==0.0.7
+#21 7.286  + annotated-types==0.8.0
+#21 7.286  + anyio==4.16.0
+#21 7.286  + argon2-cffi==25.1.0
+#21 7.286  + argon2-cffi-bindings==26.2.0
+#21 7.286  + beautifulsoup4==4.15.0
+#21 7.286  + certifi==2026.11.20
+#21 7.286  + cffi==2.1.1
+#21 7.286  + charset-normalizer==3.5.2
+#21 7.286  + click==8.5.1
+#21 7.286  + contourpy==1.4.0
+#21 7.286  + curl-cffi==0.17.0
+#21 7.286  + cycler==0.12.1
+#21 7.286  + datetime==6.0
+#21 7.286  + defusedxml==0.7.1
+#21 7.286  + deprecated==3.0.1
+#21 7.286  + exchange-calendars==4.13.3
+#21 7.286  + fastapi==0.165.0
+#21 7.286  + finance-datareader==0.9.202
+#21 7.286  + fonttools==4.68.0
+#21 7.286  + goldnam-sachs==0.0.0a1 (from file:///app)
+#21 7.286  + h11==0.16.0
+#21 7.286  + httpcore==1.0.9
+#21 7.286  + httpx==0.28.1
+#21 7.286  + idna==3.20
+#21 7.286  + kiwisolver==1.5.1
+#21 7.286  + korean-lunar-calendar==0.4.0
+#21 7.286  + lxml==6.1.3
+#21 7.286  + matplotlib==3.11.2
+#21 7.286  + multipledispatch==1.0.0
+#21 7.286  + narwhals==2.29.0
+#21 7.286  + numpy==2.5.5
+#21 7.286  + opentelemetry-api==1.45.2
+#21 7.286  + packaging==26.3
+#21 7.286  + pandas==3.1.1
+#21 7.286  + peewee==4.5.3
+#21 7.286  + pillow==13.0.0
+#21 7.286  + platformdirs==4.14.8
+#21 7.286  + plotly==7.1.0
+#21 7.286  + protobuf==7.36.2
+#21 7.286  + psycopg==3.3.9
+#21 7.286  + psycopg-binary==3.3.9
+#21 7.286  + pyarrow==26.0.1
+#21 7.286  + pycparser==3.12
+#21 7.286  + pydantic==2.14.4
+#21 7.286  + pydantic-core==2.50.5
+#21 7.286  + pykrx==1.0.51
+#21 7.286  + pyluach==2.3.0
+#21 7.286  + pyparsing==3.3.3
+#21 7.286  + python-dateutil==4.0.0
+#21 7.286  + pytz==2026.6
+#21 7.286  + requests==2.34.2
+#21 7.286  + requests-file==3.0.1
+#21 7.286  + scipy==1.18.1
+#21 7.286  + setuptools==80.10.2
+#21 7.286  + soupsieve==4.1.3
+#21 7.286  + sqlalchemy==2.1.9
+#21 7.286  + starlette==1.10.0
+#21 7.286  + tabulate==0.10.0
+#21 7.286  + toolz==1.2.0
+#21 7.286  + tqdm==4.70.1
+#21 7.286  + typing-extensions==4.16.0
+#21 7.286  + typing-inspection==0.4.5
+#21 7.286  + tzdata==2026.6
+#21 7.286  + urllib3==2.8.0
+#21 7.286  + uvicorn==0.54.0
+#21 7.286  + websockets==17.4
+#21 7.286  + wrapt==2.5.2
+#21 7.286  + xlrd==2.0.2
+#21 7.286  + yfinance==1.8.0
+#21 7.286  + zope-interface==8.7
+#21 DONE 7.3s
+
+#22 [web 4/7] RUN --mount=type=secret,id=build_ca     if [ -f /run/secrets/build_ca ]; then export NODE_EXTRA_CA_CERTS=/run/secrets/build_ca; fi;     npm install --global pnpm@12.21.0 && cd web && pnpm install --frozen-lockfile
+#22 6.305 
+#22 6.305 added 2 packages in 4s
+#22 6.307 npm warn install-scripts 1 package has install scripts not yet covered by allowScripts:
+#22 6.307 npm warn install-scripts   pnpm@12.21.0 (preinstall: node install.js; postinstall: node install.js)
+#22 6.307 npm warn install-scripts
+#22 6.307 npm warn install-scripts Run `npm install -g --allow-scripts=pnpm` to allow these scripts once, or `npm config set allow-scripts=pnpm --location=user` to allow them for all global installs.
+#22 6.310 npm notice
+#22 6.310 npm notice New major version of npm available! 11.19.1 -> 12.2.3
+#22 6.310 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.3
+#22 6.310 npm notice To update run: npm install -g npm@12.2.3
+#22 6.310 npm notice
+#22 6.504 ? Verifying lockfile against supply-chain policies (649 entries)...
+#22 7.590 Progress: resolved 538, reused 0, downloaded 1, added 0
+#22 7.591 Packages are hard linked from the content-addressable store to the virtual store.
+#22 7.591   Content-addressable store is at: /root/.local/share/pnpm/store/v11
+#22 7.591   Virtual store is at:             node_modules/.pnpm
+#22 7.801 Downloading next@16.4.6: 0.00 B/43.66 MB
+#22 8.828 Progress: resolved 538, reused 0, downloaded 63, added 63
+#22 9.268 Downloading @rolldown/binding-linux-x64-gnu@1.2.19: 0.00 B/8.83 MB
+#22 10.28 Progress: resolved 538, reused 0, downloaded 165, added 164
+#22 10.39 Downloading @next/swc-linux-x64-gnu@16.4.6: 0.00 B/35.23 MB
+#22 11.40 Progress: resolved 538, reused 0, downloaded 245, added 244
+#22 12.42 Progress: resolved 538, reused 0, downloaded 311, added 310
+#22 13.02 Downloading @img/sharp-libvips-linux-x64@1.3.4: 0.00 B/8.21 MB
+#22 13.74 Downloading sentry@0.50.0: 0.00 B/5.82 MB
+#22 14.86 Progress: resolved 538, reused 0, downloaded 504, added 503
+#22 15.73 ✓ Lockfile passes supply-chain policies (649 entries in 9.2s)
+#22 15.73 Lockfile is up to date, resolution step is skipped
+#22 15.74 Packages: +538
+#22 15.74 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#22 15.81 Progress: resolved 538, reused 0, downloaded 538, added 538, done
+#22 15.84 
+#22 15.84 dependencies:
+#22 15.84 + lightweight-charts 5.3.0
+#22 15.84 + lucide-react 1.77.0
+#22 15.84 + next 16.4.6
+#22 15.84 + react 19.3.1
+#22 15.84 + react-dom 19.3.1
+#22 15.84 + recharts 3.11.0
+#22 15.84 
+#22 15.84 devDependencies:
+#22 15.84 + @axe-core/playwright 4.14.0
+#22 15.84 + @playwright/test 1.65.1
+#22 15.84 + @tailwindcss/postcss 4.3.5
+#22 15.84 + @types/node 26.6.6
+#22 15.84 + @types/react 19.3.0
+#22 15.84 + @types/react-dom 19.3.0
+#22 15.84 + eslint 9.39.5
+#22 15.84 + eslint-config-next 16.4.6
+#22 15.84 + lighthouse 13.6.0
+#22 15.84 + openapi-typescript 7.13.0
+#22 15.84 + prettier 3.10.1
+#22 15.84 + sharp 0.35.5
+#22 15.84 + tailwindcss 4.3.5
+#22 15.84 + typescript 5.9.3
+#22 15.84 + vitest 5.1.1
+#22 15.84 
+#22 15.85 Done in 9.4s using pnpm v12.21.0
+#22 DONE 15.9s
+
+#23 [web 5/7] COPY web ./web
+#23 DONE 9.1s
+
+#24 [web 6/7] COPY engine/goldnam_engine/_version.py ./engine/goldnam_engine/_version.py
+#24 DONE 8.7s
+
+#25 [web 7/7] RUN cd web && pnpm build
+#25 12.05 $ next build
+#25 12.39 ▲ Next.js 16.4.6 (Turbopack)
+#25 12.41 ✓ Running next.config.mjs took 13ms
+#25 12.42 
+#25 12.44   Creating an optimized production build ...
+#25 18.64 ✓ Compiled successfully in 6.2s
+#25 18.65   Running TypeScript ...
+#25 24.35   Finished TypeScript in 5.7s ...
+#25 24.36   Collecting page data using 4 workers ...
+#25 24.90   Generating static pages using 4 workers (0/12) ...
+#25 25.21   Generating static pages using 4 workers (3/12) 
+#25 25.21   Generating static pages using 4 workers (6/12) 
+#25 25.28   Generating static pages using 4 workers (9/12) 
+#25 25.28 ✓ Generating static pages using 4 workers (12/12) in 377ms
+#25 25.28   Finalizing page optimization ...
+#25 25.32 
+#25 25.32 Route (app)
+#25 25.32 ┌ ○ /
+#25 25.32 ├ ○ /_not-found
+#25 25.32 ├ ○ /evidence
+#25 25.32 ├ ○ /journal
+#25 25.32 ├ ○ /login
+#25 25.32 ├ ○ /market
+#25 25.32 ├ ○ /screener
+#25 25.32 ├ ○ /search
+#25 25.32 ├ ○ /settings
+#25 25.32 ├ ○ /stock
+#25 25.32 └ ○ /trade
+#25 25.32 
+#25 25.32 
+#25 25.32 ○  (Static)  prerendered as static content
+#25 25.32 
+#25 DONE 25.5s
+
+#26 [stage-2 10/10] COPY --from=web --chmod=755 /build/web/out ./web/out
+#26 DONE 2.7s
+
+#27 exporting to image
+#27 exporting layers
+#27 exporting layers 2.8s done
+#27 writing image sha256:b02253e631d40bea3e2b188c2ba9011f94257df74633743bfda41f319d83c3f3 done
+#27 naming to docker.io/library/goldnam-sachs:alpha done
+#27 DONE 2.8s

@@ -1,0 +1,29 @@
+# Local only. Same app + DB architecture; no Render resources are created.
+services:
+  db:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: goldnam
+      POSTGRES_USER: goldnam
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U goldnam -d goldnam"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+  app:
+    build: .
+    ports: ["127.0.0.1:10000:10000"]
+    environment:
+      DATABASE_URL: postgresql://goldnam@db:5432/goldnam
+      APP_PASSCODE_HASH: ${APP_PASSCODE_HASH:-}
+      SESSION_SECRET: ${SESSION_SECRET:-}
+      OPENDART_API_KEY: ${OPENDART_API_KEY:-}
+      SEC_USER_AGENT: ${SEC_USER_AGENT:-}
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  pgdata:

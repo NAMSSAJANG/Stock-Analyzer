@@ -1,0 +1,1 @@
+Render Blueprint JSON Schema: PASS (no remote validation or deployment)

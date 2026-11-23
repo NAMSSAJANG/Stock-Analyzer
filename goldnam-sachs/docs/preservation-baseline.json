@@ -1,0 +1,172 @@
+{
+  "source_commit": "3cce17f65d56cc266af9f354cf137c000af64fb9",
+  "source_sha256": {
+    "core_models.py": "705fdbeb0b889561f8b582f8ba7aab1e1a1454f829eb43a037647e5529f13a65",
+    "trade_core.py": "d4072c5db44d82512cfc760e938c256f2da0b8f82577264302ce75ea1644547d",
+    "trade_engine.py": "d2cecb826719b4adef889c982f11fb99c70b3da3cadbbec38aca753e767cd357",
+    "execution_engine.py": "1a64daa8e2944a842ee63f4f045c40e70b552694491559ac75fab62214bcfe0d",
+    "technical_engine.py": "264ba1cfd08a2884791c55a69c2f67bca6ea9248edae1744ca43365ef528b085",
+    "company_engine.py": "b05682503332ca86cc3746f8b2071ce6100e2e92c60709194fc06365fe1f9d00",
+    "quant_engine.py": "7ec6aa02dbb20b47d2148da37f6943323e2fbc9b8bf9746da31d962805fdfc74",
+    "scoring_utils.py": "abccb2db114af8b326b5509e21e7d1bb128ac5713697d48c17271eaf6df1a90d",
+    "opportunity_engine.py": "bd3b00edb1a784ac5c647f0d420b0d7b045b0d26c22fe6f1e2a0abcfc55e2bbb",
+    "consensus_engine.py": "ca9608a1e4cd17e028fec7e260bd0e02e3f1d5f65645b77656af95e98ed73e5e",
+    "sr_engine.py": "797d31b059569b32bc5ad80682b993968c8054f90417ddec1e6a593703e9f8f9",
+    "setup_engine.py": "e911b8254c29d8380c615c33a2a0103a514f49f74d75310da8706832fd0da34e",
+    "risk_engine.py": "47594e95b82f905d1c84a8d59fe416f9fc3eea678f6cb890d4f0356bdaacc832",
+    "market_regime.py": "6670a620b10f97bb727516964917271e583a691d0545d8de4588a9852bbc73f8",
+    "calibration_engine.py": "f930d98923e5cd475308d796c364fd8af45b48c2914b3c0e9bd323252feb30e3",
+    "calibration_cache.py": "712b11b594ab7cf148fc619a9393a2de493fcdfedfc383f1a30901d8dc63c45a",
+    "korean_stock_search.py": "5b6aec5d1aa867c189f16efbf22712414b6d4b01466a7d9bae68d2373f3438d6",
+    "scanner_engine.py": "a772150c363cdc487070c99047a9e064e577f4a1145e6056a236b428e5d84a9d",
+    "history_store.py": "f41e455222622375f3f553f1934ffdaac34b14445f38369e41d00c8d3638040d",
+    "options_analyzer.py": "0a56c06206b4cf7465abd98b25ba095527fcaf1fdc96be2eacd03e624ed734bf"
+  },
+  "modules": {
+    "models": {
+      "CompanySnapshot": "afa9275f6ace84107629888f2c7cb612908ce4b7f4881da44e62e0541017ea8b",
+      "TechnicalSnapshot": "69209cd3be9c067472295db990b9d8970a59d07976c714e5ebdd45d0c9bad912",
+      "MarketRegimeSnapshot": "6cbc4cd66359152937c4dfcc1d0462f25efed80521f526d48b8d4ae4e38f4ec2",
+      "PriceZone": "5dd8913081e02bc949c619addca2803a4d8d7f19bc44d703f591dfa392399ac7",
+      "SetupScore": "7508a10ae4ea8928950b3106a57fd5ff8e34a683411d995ef4ff8062b5c895ea",
+      "SetupSnapshot": "bc3dc2e25427d38e88c7483975cb5cb6cae98fb6172f1d47b15391eebd6bb8e4",
+      "RiskSnapshot": "0dde63e38c79e11b93a9c8935db6c5d13f1c2a12db854e1177e78829fd269d72",
+      "OpportunitySnapshot": "bafe24185256844104cca5a41d9cd893b775cd8b922bafa22c0249a21864a0fd",
+      "ConsensusSnapshot": "9003bc9d9a54bfb11bb5920241c867538c23b31c3247008cadb204f062bbb773"
+    },
+    "trade.trade_core": {
+      "dec": "2466d1eba93dadddf461f3b8da5435eb365f38ae30eb22db7d2a9eea34bb6de8",
+      "Costs": "ff84f6d175bf48a845040d5b699c597420bc41cd3222ce0051725b5dd990051c",
+      "Position": "af5179c8921e3f63e31a8a3374b834176b569ff85362915b6822f3bf36960fb2",
+      "target_average": "09c8348f3bd84fe1f75dc539762010f56339dca690d0775a21d20816f2d9119c",
+      "affordable_shares": "3c95dadef696e6dc47d503e8f7a37c8a28b2b3599ddfc60a33c41c5c5e4fc3ef",
+      "position_size": "0e038b52130ab937cc45778740e73963a2a75de45a9f79f570ff7181091d1a1d",
+      "plan_ladder": "b4f651d41803ca66f5f83c082309571bcb7de6484629cea7be591b5624ab730b",
+      "simulate": "e6134655d84917d2ecdfcfea73744d78ebafa34e5c9d59d9ce2d5df5ba26811e",
+      "SCENARIOS": "20b8d9f96adbb4981aeaf3a2f79661ea93e5f7750a44dd0c5ad9d2d00af40f12"
+    },
+    "trade.execution_engine": {
+      "EXECUTION_LOGIC_VERSION": "5e1bea398a06a7d778a24c109f0d75e8cb16fd18c2dcf86a34d8e17d68cec74c",
+      "_daily_index": "5125e75ee86562fec9a8cbb11aae390f4d8ceb81c86b1cbd0de6226998fa33b0",
+      "run_execution_study": "e10d878496917402fda52b878ab2475e69a4c20f70d8491389f03b3a05bcf66a"
+    },
+    "factors.technical_engine": {
+      "period_return": "4c3c5e4a8101e938eaf7617ac919ed81884d8362b107e76c074e78e569a9ea23",
+      "_rsi": "a9c19bf36ba3b01c4bb1caf771f8dce103983b903c5f7c8e0c21556bba2e6ac0",
+      "_adx": "a3726fcdbc547c5e68f99cc81542d08159472eb49ac55a42331f0a740a945465",
+      "build_technical_snapshot": "7a122f52b8c12039d76ede9f69ae11fbca0d50a871da51a07685df5295e0711d"
+    },
+    "factors.company_engine": {
+      "_pct": "1535786c6c4b2ff567bcef43580b5d4e551c6283859ed2fdf9abd25d13d984ed",
+      "_num": "3b145fccaf9570423075c30817452f1520e3e1a31b6ab4fca016f1c37273553d",
+      "_positive_multiple": "d5b940f01e03969a7765ebd2503901433951bbdd420037c323a173e32ca36d42",
+      "extract_company_raw": "293745e0a41ae33d6dc30a2e71702e9587ce8c468562ee97d1e88b22389c3d9e",
+      "_absolute_scores": "45d6fcf37a6fed69cfbb169cb8c7225758aee75050175cf01f890b24d4a66c4c",
+      "_peer_relative": "8cf406dc3391b8fbac7fc4b0ec02cd2b187d54bd59ff31fb4ba63049062ff83a",
+      "build_company_snapshot": "e4086dea9994816100251f782cd90dd9fe3717efb51d8ffd4c10e6972ca54e8e"
+    },
+    "scoring.quant_engine": {
+      "quant_composite_score": "231289da41cfafb6f25fffb9e117d6c9f1a6f7747bf9c5c9580ef62a535e0fae",
+      "build_quant_snapshot": "0c7f999221125433eb9e5c55e333588e0d77bf4d9cf3b8b0a6fad9c28f4b0f99",
+      "financial_rows": "20cca28c5fb6b93189c82ca3b7a21d561991a1e41681eca7df08c7f4b82cea33"
+    },
+    "scoring.scoring_utils": {
+      "clip": "98da4da10ece5503be00a5f62e570ea90418185c1949c579cb66e24aaa452d50",
+      "finite": "cac9edbce19e8ba25d42e9f2ab8d232a108a51b3917f26fa064be82f9b6867e3",
+      "scale": "0b16cfae7b144ab4cafc2063d20710addd443ea5791dd79fd4c9e1915d0368e9",
+      "weighted": "b1aa07216b7d1517697d3d3f0c392dcabe32c8f41cf6a290ba28bd0b9f6bbfec",
+      "grade": "d26ddf737f62706784ce19d9e015a20ac3b093d9bc82909f771ab37413e29d48",
+      "percentile_score": "b74048eb2c7b8b2051b11e72f184b7257e1ad212079795fb4ece756a2c2d0d6f"
+    },
+    "scoring.opportunity_engine": {
+      "build_opportunity": "6dcce924e13fa0111784a7a13758e0c123b504c6553111b7bc25ab9e62371c0d"
+    },
+    "scoring.consensus_engine": {
+      "_score_direction": "b514662f55de713e2f7c58f228a9ed94be311021b5c82cadb46058d0023b25df",
+      "_option_direction": "8881fc721100984178b1c961e24eb4bebebdbad41014078c64ede5497a67f691",
+      "build_consensus_v2": "e8f08c1ea8902401fde827bc31aaacd23128d7a63aff4d3ebf7881c1f28e62f0"
+    },
+    "timing.sr_engine": {
+      "ZoneSet": "2b60655f834998e33d31fcabeebc60cf731b949b768b01d369a5ca739ecbbc35",
+      "_pivots": "0a43979567c2198530fed5d0b7486064c5e1cbc80e4f4ea699fdcd3f6361b087",
+      "_volume_nodes": "69603f8bb713bc854a3fcbca963f8a98d31ca25367cc36dca4c1931efbf44f69",
+      "build_zones": "42e7d60bf722b23a2fa8b6393ddfb607857445c0af48feccb99780ad0d181eaf"
+    },
+    "timing.setup_engine": {
+      "_nearest_support": "ecc81ad497bae047e441bc243528d76db401e17d3a416bb76ff532e8673ee300",
+      "_nearest_resistance": "6c76aba6ffc2867451f14e2e20501c6f48c3e4cec8f05c885897455b99dded87",
+      "_targets_from_resistance": "7d86a410be11594dbb740b4c89637c83fb96717298b9ea89a8cbeac4bdb571a3",
+      "_risk_reward": "e3e23da65d1e93feb7a3afa6efc5ffa782ba255d2801cfdb1bb19c4cb5ec2877",
+      "build_setups": "abe2de85d1f3f5b8b9eab1850ca92aa3731188a53059c24395629d9c724bfb63"
+    },
+    "risk.risk_engine": {
+      "_KRW_PER_USD_APPROX": "b68558a3d3e84ceb13c75cd6a7b96fbfe96504c84963c4370ea4b30fa771667e",
+      "build_risk_snapshot": "1e64715f281b2f56eefe8d1aa1d94a6766b79657ece5a07a0ac02ef26e76fb3d"
+    },
+    "regime.market_regime": {
+      "US_SECTOR_PROXY": "06ae7d51c128cd3bbbeae58faa59ccf639725e71a97d30ba8abbf4c9ec763ab4",
+      "KR_GLOBAL_PROXY": "35748b30f56171ad4dac859a04f5cf1a7e9816e37e9de73951af8d5645160d55",
+      "market_for_symbol": "4fd29c0b222abc78f50535bd39d92a0def36f2baeafaf7564c963eecec2f0e3a",
+      "_trend_score": "578b8c4a051c668b4fc27b9d4b7968ad9d2ccb571f5b1fdd719af665973f7209",
+      "_series": "67e84ed83abfbc0fff2ef35c23091277c983463bf49a05190d6b8fa58919082b",
+      "build_market_regime": "466d18b26494fdb1368df10c713de06d37a8f510fb40075bc16c127ba37a3590"
+    },
+    "validation.calibration_engine": {
+      "EPISODE_RESET_DAYS": "812c5dd82d684a1b2262574afba3c88ae382e599bc9336cee88227a18e361cf3",
+      "HORIZONS": "072085900469d131fba87b499b5b91d6b890e01a24ebc12cdaffb05fc96f03ba",
+      "PRIMARY_HORIZON": "3d44fbe339cc2ccc3e1f591498afca08bc2dd7c0dfce4f805187c747328d99ba",
+      "MAX_CALIBRATION_WINDOW": "1b24bb0c0f07b3caf2aaa70c9150774566b560dc0fa1156bbe8d09c62f0898d3",
+      "MIN_TECH_HISTORY": "5e6c7183eb6620061a213cd8ea0ac7a35f5ad82568214458a8310eace6502aeb",
+      "CALIBRATION_LOGIC_VERSION": "5b00fd7823655266407e71386e3e9ba994df0820a92857f0cf9b8dc5ee84cccb",
+      "wilson_interval": "050fd3f194de61d3a716f67439d26f7bda4d5e81c21b0255a8425124a382e313",
+      "close_drawdown": "cd0cdad09fa8a6f1db64b487b2d3b98780acd924c5b5418931f1151612756a47",
+      "_episode_metadata": "0ef914e387dc9baec2bc03984846336203769570b8cee3ff2465fc2b7827cc9e",
+      "_spaced_qualified_indices": "6bdb92ce27196f5bd55f20c4102e54c80f27535e1a044f183dc529d49918b94a",
+      "_episode_concentration": "1dc969cd2777efa9c390c40163527ed64e280af046d30f80f1708e8051309df0",
+      "run_setup_calibration": "926c697d9124a0c8e87daa77fab0c5d1ddbd7cfdb4625dde60288aea3774a6f7"
+    },
+    "validation.calibration_cache": {
+      "data_signature": "7a5737b1b5b82de8ef4f9fdd750f3cb70ad49f3004f17eff3e5ffd86d990750c",
+      "calibration_key": "71b7889b7d70f27f757d33a539c46056bef17a575cf40611f3837aed397002b5"
+    },
+    "data.korean_stock_search": {
+      "_HANGUL": "c8ddb08353cacc86f926deed08e362ab5be19a6c4e6cbae5d9d9ad0242ee7412",
+      "_EMPTY": "d205db7cc9a68c42b146617f1fb89b0a849d90da7178c7218c365d43d1f26526",
+      "contains_hangul": "5100b754a433a76254b968f9ced904c45e02555067c46ea6a50e81967c7f9dca",
+      "_normalise_listing": "834aec7f3ffdfb99819225a33fee447b4e9545d14bb777bb9725cb0111dd4d8c",
+      "_fallback_frame": "79ff184b1882280b04a607a4ae344487319bb0ca88722177c2f3ed312f8a6e5d",
+      "load_krx_listing": "c5fdbea63e072a76779918daaaa51dfdd942979a128ae7456fba56dd97c49ee0",
+      "search_krx_listing": "bc3e2ee0cf695c3b8ac1b1c7e03770d8347783b8a2b42c7e56c1fda94ae56200"
+    },
+    "data.scanner_engine": {
+      "FALLBACK_NASDAQ": "f61fd5cdc94e927b6d873892ac1074d919e81198d024d398251de1a1f934851e",
+      "FALLBACK_SP500": "055b13341636936f91d19539ae48192b7fe865a228a668b44caac0f54da7d666",
+      "FALLBACK_KOSPI": "eeee3c93d5bb0212a8e3415fd9937db72ec1a07c9e6e4a714176a02abc2765af",
+      "_yahoo_symbol": "5a9cd5efe25d709fb05be4a8bb497d5b81355a7a48987a1463f97de89f2e006f",
+      "index_universe": "7ef6df6498c53a29f90cadec74f826b54ab85ce5960124f88270aea7febd36a5",
+      "_history_for": "877b2723b0632ba15ddfbb16b0d41c530e9bc39289a4dd1e88109bbc7fab8a30",
+      "scan_market": "a61065a98a26a177aaa52d43b7bfc48c7474e7ddea3fc6d731e5da5f5d1214cf",
+      "top_views": "59fc02f0ecd5de44ae2fc6a7b4ba26eaafea67e529699259e53da1e86ed525d8"
+    },
+    "data.history_store": {
+      "HistoryTrend": "34a4adc8c82fb1f73879023c49dd7e8bd539c5dd32f96ec5bfd52f1e193c33e0",
+      "SQLiteHistoryStore": "fc65c0523ab1734c11a66b836c3caabc19528b60929311dc93796124fc910c37"
+    },
+    "factors.options_analyzer": {
+      "OptionSummary": "22945604f0c24bcab622167bad226a8ecf731aa6c69f69179dc8d28eba5d9066",
+      "OptionEntry": "72dac215c68bba01c75addee3c56ad79633cc0cd5659fe1c3a738a0d06ec531d",
+      "_number": "1f8b3d63b8b172d8d2ea116e53bb5857606b0da050d2389cf2dac5e80569367b",
+      "_total": "79041fb52f62b2c7f5ad4fcabddef8459966388dfa7b3997ca847721f0b2b204",
+      "_weighted_iv": "155ab314573cf95ab7e4a70a586140eb3ba4a950ed23f586ec666da60b347fb9",
+      "_oi_wall": "be3e598b0d74fb7e23c18ba67ec5a537f9acbe45d2d359d14ca366150ea804ff",
+      "_atm_row": "37a39dbba2bb44566485e50f106e0f557ac87dffc050dd3b3128e7e30f42e356",
+      "calculate_max_pain": "f7639cfe6ab5a8aed9d19c996e9db2758d59709d810ed9a438f74b89593b9cee",
+      "summarize_options": "cdfe399c41f9306d8dd6e58a40c8a7d43653c8ad4bb8527ee5fb8490e832a7a0",
+      "option_bias": "95e66d2c1123fd29d2ccf1b6442f640a2736e51cbcde79e5eea37b1ee801c12e",
+      "option_entry_readiness": "224b1e1608af43b2edf90cbb373b48c2149ec21de1bf13ae94f3ea4e3e89f98a",
+      "price_confluence": "8f59e71355139e4b1408a392d93618157cfa5cc33093e0ce1a4abda842a5fa72",
+      "_fmt_ratio": "18b05fbd4364401a0e2f036ec1def31e663350ecb66e83297c8f34ef44e0012a",
+      "_fmt_iv": "ec56eb9d16e0267ee80d1d8bcac18b0751be041db60db6cbbf8554950a05174e"
+    }
+  }
+}
